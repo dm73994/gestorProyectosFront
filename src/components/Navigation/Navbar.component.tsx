@@ -27,7 +27,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const NavbarComponent = () => {
   const {isOpen, closeMenu} = useContext(NavigationContext)
   const theme = useTheme();
-  const menu = MenuGenerator();
+  
     return (
         <Drawer
           sx={{
@@ -66,15 +66,11 @@ export const NavbarComponent = () => {
 
           <Divider />
 
-          <List disablePadding>
-
-            {menu}
-              <NavLinkComponent icon={<HomeOutlined />} path='/home' text='Inicio' />
+            <MenuGenerator />
+              {/* <NavLinkComponent icon={<HomeOutlined />} path='/home' text='Inicio' />
               <NavLinkComponent icon={<HomeOutlined />} path='/login' text='Usuarios' />
 
-              <NavGroupComponent links={ [{icon: <HomeOutlined />, path: '/home', text: 'Inicio' }] } />
-
-          </List>
+              <NavGroupComponent links={ [{icon: <HomeOutlined />, path: '/home', text: 'Inicio' }] } /> */}
 
         </Drawer>
 

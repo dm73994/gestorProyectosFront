@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { axiosBackendAPI } from '../../../services/axios/backendAPI';
 import { getUser } from '../../../services';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppStore, useAppDispatch } from '../../../redux/store';
+import { AppStore } from '../../../redux/store';
 import { useFetchAndLoad } from '../../../hooks';
 import { loggInUser } from '../../../redux/slices/User/UserSlice';
 import { UserAdapter } from '../../../adapters';
@@ -18,7 +18,7 @@ import { getLogin } from '../../../redux';
 export const useLogin = () => {
     const theme = useTheme();
     const {loading, callEndpoint} = useFetchAndLoad();
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
 
     const {register, control, handleSubmit, setValue, formState: { errors }} = useForm({
         resolver: yupResolver(loginSchema),

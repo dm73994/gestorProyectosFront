@@ -10,6 +10,14 @@ export const getUser = (userId: number) => {
     };
 };
 
+export const getUsers = () => {
+    const controller = loadAbort();
+    return {
+        call: axiosBackendAPI.get<UserModel>(`/superUsuario/usuarios`, {signal: controller.signal,}),
+        controller,
+    };
+}
+
 export const loggin = (data: LoginModel) => {
     const controller = loadAbort();
     return {

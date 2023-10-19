@@ -1,13 +1,13 @@
-import React from 'react'
-import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { LoginPage } from '../pages'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { PrivateRouterWrapper, PublicRouterWrapper } from '.'
-import { Typography } from '@mui/material'
 import { lazy } from 'react';
 import { AppStore } from '../redux/store'
 import { useSelector } from 'react-redux'
 
 const LoginSuperFix = lazy(() => import('../pages/Login/Login.page') ) 
+const UserSuperFix = lazy(() => import('../pages/User/profile/Profiles.page') ) 
+const UsersListSuperFix = lazy(() => import('../pages/User/UsersList/UsersList.page') ) 
+
 
 
 export const AppRouter = () => {
@@ -24,8 +24,13 @@ export const AppRouter = () => {
     },
     {
       path: '/home',
-      element: <PrivateRouterWrapper component={<Typography>HOLA DESDE HOME</Typography>}  />
-    }
+      element: <PrivateRouterWrapper component={<UserSuperFix />}  />
+    },
+    {
+      path: '/users',
+      element: <PrivateRouterWrapper component={<UsersListSuperFix />}  authorized={['administrado']} />
+    },
+
   ])
 
   return (

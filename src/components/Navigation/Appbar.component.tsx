@@ -19,7 +19,7 @@ export const AppbarComponent = () =>  {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color='transparent' elevation={0}>
+      <AppBar position="static" color='transparent' elevation={1}>
         <Toolbar>
           <IconButton
             size="large"

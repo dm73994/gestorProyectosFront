@@ -1,2 +1,2 @@
 export * from './MenuGenerator';
-export * from './NavigationMenu';
+export * from './navigationMenu';

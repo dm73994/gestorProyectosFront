@@ -1,3 +1,4 @@
+import { permissionsModel } from ".";
 import { RoleModel } from "./Role.model";
 
 export type UserModel = {
@@ -9,4 +10,6 @@ export type UserModel = {
     token: string;
     state: boolean;
     roles: RoleModel[];
+    email: string;
+    permissions: permissionsModel;
 }

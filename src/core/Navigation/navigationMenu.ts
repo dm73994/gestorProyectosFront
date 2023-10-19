@@ -1,37 +1,26 @@
 import { MenuModel } from '../../components/Navigation';
 import { RoleModel } from '../../models/Role.model';
-import { HomeOutlined } from '@mui/icons-material';
+import { Home, AdminPanelSettings, Group} from '@mui/icons-material';
+
 export const navigationMenu = () => {
 
     const menu: MenuModel[] = [
         {
-            icon: HomeOutlined,
+            icon: Home,
             path: '/home',
             text: 'Inicio',
-            allowed: [ ]
-        },
-        {
-            icon: HomeOutlined,
-            path: '/users/create',
-            text: 'Inicio',
             allowed: [ 'administrado' ]
         },
         {
-            icon: HomeOutlined,
+            icon: Group,
             path: '/users',
-            text: 'Inicio',
+            text: 'Usuarios',
             allowed: [ 'administrado' ]
         },
         {
-            icon: HomeOutlined,
+            icon: AdminPanelSettings,
             path: '/roles',
-            text: 'Inicio',
-            allowed: [ 'administrado' ]
-        },
-        {
-            icon: HomeOutlined,
-            path: '/roles/create',
-            text: 'Inicio',
+            text: 'Roles',
             allowed: [ 'administrado' ]
         },
     ]

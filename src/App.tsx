@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom'
 import { AppRouter } from './Router'
 import { Provider } from 'react-redux'
@@ -11,14 +11,16 @@ import { NavigationProvider } from './context'
 export const App = () => {
   return (
     <>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <NavigationProvider>
-            <CssBaseline />
-            <AppRouter />
-          </NavigationProvider>
-        </ThemeProvider>
-      </Provider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <NavigationProvider>
+              <CssBaseline />
+              <AppRouter />
+            </NavigationProvider>
+          </ThemeProvider>
+        </Provider>
+      </Suspense>
     </>
   )
 }

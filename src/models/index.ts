@@ -5,3 +5,4 @@ export * from './NavigationActionReducer.model';
 export * from './Navlinks.model';
 export * from './Role.model';
 export * from './User.model';
+export * from './permissions.model';

@@ -1,1 +1,4 @@
-export { default as UserPage } from './User.page';
+export * from './UsersList';
+export * from './components/InfoText';
+export * from './hooks';
+export * from './profile';

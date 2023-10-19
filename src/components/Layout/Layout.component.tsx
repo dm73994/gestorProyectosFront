@@ -33,19 +33,14 @@ export const LayoutComponent = ({children}) => {
 
   return (
     <>
-
         <Box>
           <AppbarComponent />
           <NavbarComponent />
 
           <Main open={isOpen}>
-            
-            <Typography>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus esse, pariatur ipsum dolore, atque eos placeat perspiciatis velit cumque odio porro eius dignissimos omnis ad deserunt assumenda, ullam magni. Ducimus.</Typography>
+            {children}
           </Main>
-
-          {children}
         </Box>
-
     </>
   )
 }
