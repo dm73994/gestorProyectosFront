@@ -9,19 +9,19 @@ export const navigationMenu = () => {
             icon: Home,
             path: '/home',
             text: 'Inicio',
-            allowed: [ 'administrado' ]
+            allowed: [ 'Administrador' ]
         },
         {
             icon: Group,
             path: '/users',
             text: 'Usuarios',
-            allowed: [ 'administrado' ]
+            allowed: [ 'Administrador' ]
         },
         {
             icon: AdminPanelSettings,
             path: '/roles',
             text: 'Roles',
-            allowed: [ 'administrado' ]
+            allowed: [ 'Administrador' ]
         },
     ]
 

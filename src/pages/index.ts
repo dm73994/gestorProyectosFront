@@ -1,3 +1,14 @@
 export * from './404';
+export * from './Login/components';
+export * from './Login/hooks';
 export * from './Login';
+export * from './Login/schemas';
+export * from './Roles';
+export * from './User/components';
+export * from './User/hooks';
 export * from './User';
+export * from './User/schemas';
+export { default as UpdatePage } from './User/views/Update/Update.page';
+export * from './User/views/UsersList';
+export * from './User/views/create';
+export * from './User/views/profile';

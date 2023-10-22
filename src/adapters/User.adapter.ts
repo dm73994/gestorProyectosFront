@@ -1,6 +1,28 @@
-import { UserModel } from "../models"
+import { RoleModel, UserModel, permissionsModel } from "../models"
 
 export const UserAdapter = (superUser: any): UserModel => {
+
+    const roles: RoleModel[] = superUser.roles.map((rol: any) => {
+        return {
+            id: rol.codigoRol,
+            type: rol.tipoRol
+        }
+    });
+
+    const permissions: permissionsModel = {
+        editUser: true,
+        editRole: true,
+        deleteUser: true,
+        deleteRole: true,
+        createUser: true,
+        createRole: true,
+        viewUser: true,
+        viewRole: true,
+        viewUsers: true,
+        viewRoles: true,
+        viewPermissions: true,
+        activeUser: true
+    }
 
     const formattedUser: UserModel = {
         id: superUser.identificacionUsuario,
@@ -10,27 +32,9 @@ export const UserAdapter = (superUser: any): UserModel => {
         password: superUser.loginUsuario.contraseñaLogin,
         token: '',
         state: superUser.estadoUsuario === 1 ? true : false,
-        roles: superUser.roles.map((rol: any) => {
-            return {
-                id: rol.codigoRol,
-                type: rol.tipoRol
-            }
-        }),
         email: superUser.emailUsuario,
-        permissions: {
-            editUser: false,
-            editRole: false,
-            deleteUser: false,
-            deleteRole: false,
-            createUser: false,
-            createRole: false,
-            viewUser: false,
-            viewRole: false,
-            viewUsers: false,
-            viewRoles: false,
-            viewPermissions: false,
-            activeUser: false
-        }
+        roles,
+        permissions
     }
     
     return formattedUser

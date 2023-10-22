@@ -15,7 +15,8 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     textDecoration: 'none',
     color: theme.palette.customs.dark,
     '&.active': {
-        background: theme.palette.customs.dark,
+        background: 'linear-gradient(86deg, rgba(23,26,74,1) 0%, rgba(9,9,121,0.9903419986158526) 38%, rgba(217,0,21,1) 100%)',
+        //background: theme.palette.customs.dark,
         color: theme.palette.text.secondary,
         borderTopRightRadius: '50px',
         borderBottomRightRadius: '50px',

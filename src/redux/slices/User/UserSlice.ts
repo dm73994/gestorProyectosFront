@@ -3,6 +3,7 @@ import { UserModel } from '../../../models/User.model';
 import { AuthInteface } from '../../../models';
 import { getLogin } from '.';
 import Swal from 'sweetalert2';
+import { updateUser } from '../../../services/API/User.service';
 
 type Action = {
   payload: UserModel;
@@ -25,6 +26,9 @@ export const UserSlice = createSlice({
     },
     loggOutUser: (state) => {
       state = initialState;
+    },
+    updateUserData: (state, action) => {
+      state.user = action.payload;
     }
   },
   extraReducers(builder) {
@@ -53,6 +57,6 @@ export const UserSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { loggInUser, loggOutUser } = UserSlice.actions
+export const { loggInUser, loggOutUser, updateUserData } = UserSlice.actions
 
 export default UserSlice.reducer

@@ -8,7 +8,6 @@ import { loggInUser } from "./UserSlice";
 
 // !--- INIT HANDLER ---!
 const handlerLogin: AsyncThunkPayloadCreator<any, LoginModel, {}> = async (payload, { rejectWithValue }) => {
-    console.log(payload)
     const {callEndpoint} = useFetchAndLoad();
     try {
         const response = await callEndpoint(getUser(1002963532));

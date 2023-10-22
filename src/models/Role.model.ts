@@ -1,4 +1,5 @@
 export type RoleModel = {
-    // id: number;
+    id: number;
     type: string;
+    state?: 'add' | 'remove'
 }

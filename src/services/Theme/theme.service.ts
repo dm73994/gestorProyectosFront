@@ -33,7 +33,20 @@ export const theme = createTheme({
             light: '#fff',
             dark: '#171a4a',
             contrastText: '#000',
-        }
+        },
+        error: {
+            main: '#f44336',
+        },
+        warning: {
+            main: '#ff9800',
+        },
+        success: {
+            main: '#4caf50',
+        },
+        info: {
+            main: '#1890ff',
+            light: '#89CFF0'
+        },
     },
     typography: {
         allVariants: {

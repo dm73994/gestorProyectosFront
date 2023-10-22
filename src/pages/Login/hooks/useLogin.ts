@@ -30,6 +30,7 @@ export const useLogin = () => {
 
     const onSubmit = async(data: LoginModel) => {
         const {data: rawData} = await callEndpoint(getUser(1002963532));
+        console.log(rawData);
         const user = UserAdapter(rawData);
         dispatch(loggInUser(user));
     }
