@@ -1,5 +1,7 @@
+import { UsersRoles } from "./UsersRoles";
+
 export type RoleModel = {
     id: number;
-    type: string;
+    type: UsersRoles;
     state?: 'add' | 'remove'
 }

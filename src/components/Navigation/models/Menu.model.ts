@@ -4,4 +4,5 @@ export type MenuModel = {
     path: string,
     text: string,
     allowed: string[],
+    children?: MenuModel[]; 
 }

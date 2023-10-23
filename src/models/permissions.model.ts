@@ -2,18 +2,15 @@ export interface permissionsModel {
     editUser: boolean;
     editRole: boolean;
     
-    deleteUser: boolean;
-    deleteRole: boolean;
+    addUser: boolean;
+    addRole: boolean;
 
-    createUser: boolean;
-    createRole: boolean;
-
-    viewUser: boolean;
-    viewRole: boolean;
-
+    consultUser: boolean;
+    consultRole: boolean;
+    consultDocument: boolean;
+    
     viewUsers: boolean;
     viewRoles: boolean;
-
     viewPermissions: boolean;
 
     activeUser: boolean;

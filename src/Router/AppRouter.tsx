@@ -3,6 +3,7 @@ import { PrivateRouterWrapper, PublicRouterWrapper } from '.'
 import { lazy } from 'react';
 import { AppStore } from '../redux/store'
 import { useSelector } from 'react-redux'
+import { UsersRoles } from '../models';
 
 const LoginSuperFix = lazy(() => import('../pages/Login/Login.page') ) 
 const UserSuperFix = lazy(() => import('../pages/User/views/profile/Profiles.page') ) 
@@ -10,6 +11,12 @@ const UsersListSuperFix = lazy(() => import('../pages/User/views/UsersList/Users
 const CreateUserSuperFix = lazy(() => import('../pages/User/views/create/CreateUser.page') )
 const UpdateUserSuperFix = lazy(() => import('../pages/User/views/Update/Update.page') )
 const RolesSuperFix = lazy(() => import('../pages/Roles/Roles.page') )
+
+// Vistas de director
+const AnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/Anteproyectos.page') )
+const RegisterAnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/RegistrarAnteproyecto.page') )
+const PropuestasSuperFix = lazy(() => import('../pages/Director/PropestaGrado/Propuestas.page') )
+const RegisterPropuestaSuperFix = lazy(() => import('../pages/Director/PropestaGrado/RegistrarPropuesta.page') )
 
 
 
@@ -31,19 +38,29 @@ export const AppRouter = () => {
     },
     {
       path: '/users',
-      element: <PrivateRouterWrapper component={<UsersListSuperFix />}  authorized={['Administrador']} />
+      element: <PrivateRouterWrapper component={<UsersListSuperFix />}  authorized={[UsersRoles.ADMIN]} />
     },
     {
       path: '/users/create',
-      element: <PrivateRouterWrapper component={<CreateUserSuperFix />}  authorized={['Administrador']} />
+      element: <PrivateRouterWrapper component={<CreateUserSuperFix />}  authorized={[UsersRoles.ADMIN]} />
     },
     {
       path: '/users/update/:id',
-      element: <PrivateRouterWrapper component={<UpdateUserSuperFix />}  authorized={['Administrador']} />
+      element: <PrivateRouterWrapper component={<UpdateUserSuperFix />}  authorized={[UsersRoles.ADMIN]} />
     },
     {
       path: '/roles',
-      element: <PrivateRouterWrapper component={<RolesSuperFix />}  authorized={['Administrador']} />
+      element: <PrivateRouterWrapper component={<RolesSuperFix />}  authorized={[UsersRoles.ADMIN]} />
+    },
+
+    // RUTAS DIRECTOR
+    {
+      path: '/propuestas/consult',
+      element: <PrivateRouterWrapper component={<PropuestasSuperFix />}  authorized={[UsersRoles.DIRECTOR]} />
+    },
+    {
+      path: '/propuestas/register',
+      element: <PrivateRouterWrapper component={<RegisterPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR]} />
     },
 
   ])
