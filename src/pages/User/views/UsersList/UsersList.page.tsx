@@ -46,18 +46,17 @@ const Row = ({ row, onRowClick, handleUpdateUserNavigation, handleChangeUserStat
                 <RenderRolesComponent roles={row.roles} />
             </Box>
         </TableCell>
+        
 
         <TableCell sx={{ maxWidth: '10rem' }}>
-          <Typography sx={{ textAlign: 'center' }}>
-              <UserStateComponent state={row.state} />
-          </Typography>
-        </TableCell>
+            <UserStateComponent state={row.state} />
+        </TableCell> 
 
         <TableCell>
           <Box display={'flex'}>
             {/* Ver USUARIO */}
             {   
-                row.permissions.viewUser && (
+                row.permissions.consultUser && (
                     <IconButton title='Ver usuario' onClick={() => onRowClick(row)}>
                         <Visibility sx={{ color: '#00BFFF' }} />
                     </IconButton>

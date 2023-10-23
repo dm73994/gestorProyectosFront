@@ -18,7 +18,7 @@ import { calcPaginationPerPage } from '../../utils';
 }
 
 export const TableComponent = ({ Row, data, headers, props, sx = {} }: IProps) => {
-  const totalPages = calcPaginationPerPage(data.length, 5);
+  //const totalPages = calcPaginationPerPage(data.length, 5);
   return (
     <>
       <TableContainer sx={{ height: 400, boxShadow: 'none', backgroundColor: 'white', ...sx }}>
@@ -37,7 +37,7 @@ export const TableComponent = ({ Row, data, headers, props, sx = {} }: IProps) =
 
       {/* PAGINACION */}
       <Stack spacing={2} >
-        <Pagination count={totalPages} page={1} onChange={() => {}} color={'info'} />
+        <Pagination count={10} page={1} onChange={() => {}} />
       </Stack>
     </>
   );

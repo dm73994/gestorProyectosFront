@@ -24,7 +24,7 @@ const LoginPage = () => {
           p: 5,
         }}
       >
-        <Grid container columns={{ sm: 1, md: 12}} sx={{ height: '100%', widht: '100%' }}>
+        <Grid container sx={{ height: '100%', widht: '100%' }}>
 
           {/* SECCION DE CONTENIDO EXTRA */}
           <Grid item xs={12} md={8} sx={{ 

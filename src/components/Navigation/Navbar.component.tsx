@@ -66,11 +66,7 @@ export const NavbarComponent = () => {
 
           <Divider />
 
-            <MenuGenerator />
-              {/* <NavLinkComponent icon={<HomeOutlined />} path='/home' text='Inicio' />
-              <NavLinkComponent icon={<HomeOutlined />} path='/login' text='Usuarios' />
-
-              <NavGroupComponent links={ [{icon: <HomeOutlined />, path: '/home', text: 'Inicio' }] } /> */}
+          <MenuGenerator />
 
         </Drawer>
 

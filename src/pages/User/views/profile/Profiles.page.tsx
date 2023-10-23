@@ -11,7 +11,7 @@ const UserPage = () => {
     const {user, theme} = useUser();
 
     return (
-        <Grid container columns={{ sm: 1, md: 12}} sx={{ height: '100%', widht: '100%' }} spacing={4} >
+        <Grid container sx={{ height: '100%', widht: '100%' }} spacing={4} >
 
             {/* PROFILE DATA */}
             <Grid item md={4} sm={1} >

@@ -106,7 +106,7 @@ export const UserForm = ({user}: IUserFormPageProps) => {
 
             <form>
                 <FormControl>
-                    <Grid container spacing={2} sm={1} md={12} sx={{ mr: 0}}>
+                    <Grid container spacing={2} sx={{ mr: 0}}>
                         {!user && (
                             <Grid item md={6}>
                                 <Controller
@@ -220,7 +220,7 @@ export const UserForm = ({user}: IUserFormPageProps) => {
                                 <Box mt={-1} >
                                     <Typography variant={'caption'} sx={{ color: theme.palette.info.main }}>Estado</Typography>
                                     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}  sx={{ width: '100%' }}>
-                                        <PinkSwitch defaultChecked disabled checked={user.state} />
+                                        <PinkSwitch disabled checked={user.state} />
                                         <UserStateComponent state={user.state} /> 
                                     </Box>
                                 </Box>
