@@ -15,6 +15,7 @@ export const RenderRolesComponent = ({roles, active = false}: IRenderRolesProps)
     <>
       {roles.map( role => (
           <Box 
+              key={role.id}
               position={'relative'} 
               sx={{ 
                   background: theme.palette.info.light ,

@@ -42,7 +42,7 @@ export const UserActionsTabs = ({user}: IUserActionsTabsProps) => {
         </AntTabs>
 
         {optionTabs.map((option) => (
-          <TabPanel value={value} index={0}>
+          <TabPanel key={option.label} value={value} index={0}>
             {option.content}
           </TabPanel>
         ))}

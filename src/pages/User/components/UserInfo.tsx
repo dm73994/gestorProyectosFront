@@ -43,7 +43,7 @@ export const UserInfo = ({user}: IUserInfoProps) => {
                 <Box display={'flex'} gap={1} pl={4} flexWrap={'wrap'}>
                     {
                         user.roles.map((role) => (
-                            <Box pl={2} pr={2} key={role.type} sx={{ background: '#89CFF0', borderRadius: '5px'  }}>
+                            <Box pl={2} pr={2} key={role.id} sx={{ background: '#89CFF0', borderRadius: '5px'  }}>
                                 <Typography textAlign={'center'} >
                                     {role.type}
                                 </Typography>

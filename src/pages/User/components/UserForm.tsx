@@ -88,7 +88,7 @@ export const UserForm = ({user}: IUserFormPageProps) => {
                         ACTUALIZAR
                     </Button>
                 )}
-                {!user && currentUser.permissions.createUser && (
+                {!user && currentUser.permissions.addUser && (
                     <Button 
                         variant='contained' 
                         onClick={() => onCreateUser(control._formValues as UserModel) } 

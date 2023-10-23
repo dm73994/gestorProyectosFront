@@ -63,7 +63,6 @@ export const InputCustom = ({ name, errors, label = '', type, disabled = false, 
             placeholder={placeholder}
             fullWidth
             error={!!errors[name]}
-            disableUnderline
             {...field}
             InputProps={{
               style: { 
