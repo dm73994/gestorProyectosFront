@@ -20,125 +20,120 @@ interface IUseUserFormProps {
 }
 
 export const useUserForm = ({user}: IUseUserFormProps) => {
-    const theme = useTheme();
-    const {loading, callEndpoint} = useFetchAndLoad();
-    const dispatch = useDispatch();
-    const userState: AuthInteface = useSelector((state: AppStore) => state.user);
-    const [roles, setRoles] = useState<RoleModel[]>([]);
-    const navigate = useNavigate();
+  const theme = useTheme();
+  const {loading, callEndpoint} = useFetchAndLoad();
+  const dispatch = useDispatch();
+  const userState: AuthInteface = useSelector((state: AppStore) => state.user);
+  const [roles, setRoles] = useState<RoleModel[]>([]);
+  const navigate = useNavigate();
 
 
-    const {register, control, handleSubmit, setValue, formState: { errors }, getValues} = useForm<PartialUserModel>({
-        resolver: yupResolver(userSchema),
-        defaultValues: user ? user : defaultUserValues,
-        resetOptions: {
-            keepErrors: false, // input errors will be retained with value update
-        }
-    });
+  const {register, control, handleSubmit, setValue, formState: { errors }, getValues} = useForm<PartialUserModel>({
+    resolver: yupResolver(userSchema),
+    defaultValues: user ? user : defaultUserValues,
+    resetOptions: {
+      keepErrors: false, // input errors will be retained with value update
+    }
+  });
 
-    const onSubmit = async(data: UserModel) => {
-        console.log('ON SUBMIT', data);
-        try{
-            const response = await callEndpoint(createuser(data));
-            console.log(response)
-            Swal.fire({
-                title: 'Usuario Creado',
-                text: 'El usuario se ha actualizado correctamente',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            })
-            navigate('/users')
-        }catch(err){
-            Swal.fire({
-                title: 'Error',
-                text: 'Ha ocurrido un error al intentar crear el usuario',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            })
-        }
+  const onSubmit = async(data: UserModel) => {
+
+    try{
+      await callEndpoint(createuser(data));
+
+      Swal.fire({
+        title: 'Usuario Creado',
+        text: 'El usuario se ha actualizado correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+      navigate('/users')
+    }catch(err){
+      Swal.fire({
+        title: 'Error',
+        text: 'Ha ocurrido un error al intentar crear el usuario',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
+    }
         
-    }
+  }
 
-    const onCreateUser = async(data: UserModel) => {
-        data.id = parseInt(data.id.toString())
-        console.log('ON SUBMIT', data);
-        try{
-            const response = await callEndpoint(createuser(data));
-            console.log(response)
-            Swal.fire({
-                title: 'Usuario Creado',
-                text: 'El usuario se ha creado correctamente',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            })
-            navigate('users', {replace: true})
-        }catch(err){
-            Swal.fire({
-                title: 'Error',
-                text: 'Ha ocurrido un error al intentar crear el usuario',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            })
-        }
+  const onCreateUser = async(data: UserModel) => {
+    data.id = parseInt(data.id.toString())
+
+    try{
+      await callEndpoint(createuser(data));
+
+      Swal.fire({
+        title: 'Usuario Creado',
+        text: 'El usuario se ha creado correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+      navigate('users', {replace: true})
+    }catch(err){
+      Swal.fire({
+        title: 'Error',
+        text: 'Ha ocurrido un error al intentar crear el usuario',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
+    }
         
+  }
+
+  const onUserUpdate = async (updateData: UserModel) => {
+    try{
+      const oldData = await callEndpoint(getUser(updateData.id));
+      const newUpdateUser = {...oldData.data, ...updateData}
+      const response = await callEndpoint(updateUser(newUpdateUser));
+      // dispatch(updateUserData(response.data));
+      navigate('-1', {replace: true})
+      Swal.fire({
+        title: 'Felicitaciones',
+        text: 'Se ha actualizado el usuario correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+    }catch(err){
+      Swal.fire({
+        title: 'Error',
+        text: 'Ha ocurrido un error al actualizar el usuario',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
     }
+  }
 
-    const onUserUpdate = async (userId: number, updateData: UserModel) => {
-        try{
-            const oldData = await callEndpoint(getUser(userId));
-            const newUpdateUser = {...oldData.data, ...updateData}
-            const response = await callEndpoint(updateUser(userId, newUpdateUser));
-            // dispatch(updateUserData(response.data));
-            navigate('-1', {replace: true})
-            Swal.fire({
-                title: 'Felicitaciones',
-                text: 'Se ha actualizado el usuario correctamente',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            })
-        }catch(err){
-            Swal.fire({
-                title: 'Error',
-                text: 'Ha ocurrido un error al actualizar el usuario',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            })
-        }
+  const loadRoles = async() => {
+    try{
+      // Obtener roles de la base de datos
+      const {data} = await callEndpoint(getRoles());
+
+      // Adaptar los roles para el front
+      const rolesData = data?.map((rol) => RoleAdapter(rol))
+      setRoles(rolesData);
+
+    }catch(err){
+      throw new Error(err.message);
     }
+  }
 
-    const onUserCreate = () => {
-
-    }
-
-    const loadRoles = async() => {
-        try{
-            // Obtener roles de la base de datos
-            const {data} = await callEndpoint(getRoles());
-
-            // Adaptar los roles para el front
-            const rolesData = data?.map((rol) => RoleAdapter(rol))
-            setRoles(rolesData);
-
-        }catch(err){
-            throw new Error(err.message);
-        }
-    }
-
-    return {
-        theme,
-        onSubmit: handleSubmit(onSubmit),
-        control,
-        register,
-        errors,
-        onUserUpdate,
-        onUserCreate,
-        getValues,
-        loading,
-        user: userState.user,
-        setValue,
-        loadRoles,
-        roles,
-        setRoles,
-        onCreateUser
-    }
+  return {
+    theme,
+    onSubmit: handleSubmit(onSubmit),
+    onCreate: handleSubmit(onCreateUser),
+    onUpdate: handleSubmit(onUserUpdate),
+    control,
+    register,
+    errors,
+    getValues,
+    loading,
+    user: userState.user,
+    setValue,
+    loadRoles,
+    roles,
+    setRoles,
+  }
 }  

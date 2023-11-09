@@ -1,12 +1,9 @@
 // @MUI Components
-import {  Pagination, Stack, Table, TableBody, TableContainer, TableHead, Typography } from '@mui/material';
+import {  Pagination, Stack, Table, TableBody, TableContainer, TableHead } from '@mui/material';
 
 // @Components
 import { SxProps } from '@mui/material/styles';
-import React from 'react';
 import { TableHeader } from '.';
-import { theme } from '../../services';
-import { calcPaginationPerPage } from '../../utils';
 
 // @Interfaces
  interface IProps {
@@ -30,7 +27,7 @@ export const TableComponent = ({ Row, data, headers, props, sx = {} }: IProps) =
           <TableBody sx={{ boxShadow: 'none', backgroundColor: 'white' }}>
             {data?.length > 0 && (
               data.map(row => <Row key={row.id} index={row.id} row={row} {...props} />)
-              )}
+            )}
           </TableBody>
         </Table>
       </TableContainer>

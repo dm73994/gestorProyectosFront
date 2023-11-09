@@ -1,9 +1,9 @@
-import { Container, Typography,Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { AppbarComponent, NavbarComponent } from '..';
 import { NavigationContext } from '../../context';
-import { App } from '../../App';
 import { styled } from '@mui/material/styles';
 import { useContext } from 'react';
+import { theme } from '../../services';
 
 export const drawerWidth = 240;
 
@@ -16,7 +16,9 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  margin: '.5rem 4rem',
+  backgroundColor: theme.palette.customs.main,
+  paddingInline: '4rem',
+  height: '100%',
   ...(open && {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
@@ -33,14 +35,16 @@ export const LayoutComponent = ({children}) => {
 
   return (
     <>
-        <Box>
-          <AppbarComponent />
-          <NavbarComponent />
+      <Box>
+        <AppbarComponent />
+        <NavbarComponent />
 
-          <Main open={isOpen}>
+        <Main open={isOpen}>
+          <Container  sx={{ backgroundColor: theme.palette.customs.main, padding: '0 !important' }}  >
             {children}
-          </Main>
-        </Box>
+          </Container>
+        </Main>
+      </Box>
     </>
   )
 }

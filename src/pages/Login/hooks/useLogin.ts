@@ -1,45 +1,51 @@
 import { useTheme } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
-import { LoginModel, UserModel } from '../../../models';
+import { LoginModel } from '../../../models';
 import { defaultLoginValues, loginSchema } from '..';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { axiosBackendAPI } from '../../../services/axios/backendAPI';
-import { getUser } from '../../../services';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppStore } from '../../../redux/store';
+import { login } from '../../../services';
+import { useDispatch } from 'react-redux';
 import { useFetchAndLoad } from '../../../hooks';
 import { loggInUser } from '../../../redux/slices/User/UserSlice';
 import { UserAdapter } from '../../../adapters';
-import { getLogin } from '../../../redux';
+import Swal from 'sweetalert2';
 
 
 
 
 export const useLogin = () => {
-    const theme = useTheme();
-    const {loading, callEndpoint} = useFetchAndLoad();
-    const dispatch = useDispatch();
+  const theme = useTheme();
+  const {callEndpoint} = useFetchAndLoad();
+  const dispatch = useDispatch();
 
-    const {register, control, handleSubmit, setValue, formState: { errors }} = useForm({
-        resolver: yupResolver(loginSchema),
-        defaultValues: defaultLoginValues,
-        resetOptions: {
-            keepErrors: false, // input errors will be retained with value update
-        }
-    });
-
-    const onSubmit = async(data: LoginModel) => {
-        const {data: rawData} = await callEndpoint(getUser(1002963532));
-        console.log(rawData);
-        const user = UserAdapter(rawData);
-        dispatch(loggInUser(user));
+  const {register, control, handleSubmit, formState: { errors }} = useForm({
+    resolver: yupResolver(loginSchema),
+    defaultValues: defaultLoginValues,
+    resetOptions: {
+      keepErrors: false, // input errors will be retained with value update
     }
+  });
 
-    return {
-        theme,
-        onSubmit: handleSubmit(onSubmit),
-        control,
-        register,
-        errors,
+  const onSubmit = async(data: LoginModel) => {
+    try{
+      const resp = await callEndpoint(login(data));
+      const user = UserAdapter(resp.data);
+      dispatch(loggInUser(user));
+    }catch(err){
+      Swal.fire({
+        title: 'Error!',
+        text: 'Usuario o contraseña incorrectos',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
     }
+  }
+
+  return {
+    theme,
+    onSubmit: handleSubmit(onSubmit),
+    control,
+    register,
+    errors,
+  }
 }  

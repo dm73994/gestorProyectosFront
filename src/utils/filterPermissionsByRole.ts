@@ -1,52 +1,108 @@
-import { RoleModel, UsersRoles, permissionsModel } from "../models";
+import { RoleModel, UsersRoles, permissionsModel, propuestaPermissions, rolePermissions, userPermissions } from '../models';
+
+const initialRoles: permissionsModel = {
+  user: {
+    edit: false,
+    add: false,
+    consult: false,
+    view: false,
+    active: false
+  },
+  role: {
+    edit: false,
+    add: false,
+    consult: false,
+    view: false
+  },
+  propuesta: {
+    add: false,
+    consult: false,
+    download: false,
+    aprove: false,
+    review: false
+  }
+}
 
 export const filterPermissionsByRole = (roles: RoleModel[]): permissionsModel => {
 
-    const roleTypes = roles.map((role: RoleModel) => role.type);
+  const roleTypes = roles.map((role: RoleModel) => role.type);
+  let initial = initialRoles;
 
-    const defaultRoles: permissionsModel = {
-        editUser: false,
-        editRole: false,
-        addUser: false,
-        addRole: false,
-        consultUser: false,
-        consultRole: false,
-        consultDocument: false,
-        viewUsers: false,
-        viewRoles: false,
-        viewPermissions: false,
-        activeUser: false
-    }
 
-    if( roleTypes.includes(UsersRoles.ADMIN) ){
-        defaultRoles.editUser = true;
-        defaultRoles.editRole = true;
-        defaultRoles.addUser = true;
-        defaultRoles.addRole = true;
-        defaultRoles.consultUser = true;
-        defaultRoles.consultRole = true;
-        defaultRoles.consultDocument = true;
-        defaultRoles.viewUsers = true;
-        defaultRoles.viewRoles = true;
-        defaultRoles.viewPermissions = true;
-        defaultRoles.activeUser = true;
-        return defaultRoles;
-    }
-    if( roleTypes.includes(UsersRoles.DIRECTOR) ){
-        
-    }
-    if( roleTypes.includes(UsersRoles.COMITE) ){
+  if( roleTypes.includes(UsersRoles.ADMIN) ){
+    initial.user = setUserPermissions([]);
+    initial.role = setRolesPermissions([]);
+    initial.propuesta = setPropuestaPermissions([]);
+    return initial;
+  }
 
-    }
-    if( roleTypes.includes(UsersRoles.JEFEDEPARTAMENTO) ){
+  if( roleTypes.includes(UsersRoles.DIRECTOR) ){ 
+    initial.user = setUserPermissions(['add', 'edit', 'active']);
+    initial.role = setRolesPermissions(['add', 'edit']);
+    initial.propuesta = setPropuestaPermissions(['consult', 'aprove', 'review']);
+  }
 
-    }
-    if( roleTypes.includes(UsersRoles.ESTUDIANTE) ){
+  if( roleTypes.includes(UsersRoles.COMITE) ){ 
+    initial.user = setUserPermissions(['add', 'edit', 'active']);
+    initial.role = setRolesPermissions(['add', 'edit']);
+    initial.propuesta = setPropuestaPermissions(['add']);
+  }
 
-    }
-    if( roleTypes.includes(UsersRoles.EVALUADOR) ){
+  if( roleTypes.includes(UsersRoles.JEFEDEPARTAMENTO) ){
+    initial.user = setUserPermissions(['add', 'edit', 'active']);
+    initial.role = setRolesPermissions(['add', 'edit']);
+    initial.propuesta = setPropuestaPermissions(['add', 'review']);
+  }
 
-    }
+  if( roleTypes.includes(UsersRoles.ESTUDIANTE) ){ /* empty */ }
+  if( roleTypes.includes(UsersRoles.EVALUADOR) ){ /* empty */ }
 
-    return defaultRoles;
+  return initial;
+}
+
+const setUserPermissions = (reject: string[]): userPermissions => {
+  const initial: userPermissions = {
+    edit: true,
+    add: true,
+    consult: true,
+    view: true,
+    active: true,
+  };
+
+  reject.forEach((permission: string) => {
+    initial[permission] = false;
+  });
+
+  return initial;
+}
+
+const setRolesPermissions = (reject: string[]): rolePermissions => {
+  const initial: rolePermissions = {
+    edit: true,
+    add: true,
+    consult: true,
+    view: true,
+  };
+
+  reject.forEach((permission: string) => {
+    initial[permission] = false;
+  });
+
+  return initial;
+}
+
+const setPropuestaPermissions = (reject: string[]): propuestaPermissions => {
+  const initial: propuestaPermissions = {
+    add: true,
+    consult: true,
+    download: true,
+    aprove: true,
+    review: true,
+  };
+
+  reject.forEach((permission: string) => {
+    initial[permission] = false;
+  });
+
+  return initial;
 }

@@ -1,14 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { UserModel } from '../../../models/User.model';
 import { AuthInteface } from '../../../models';
 import { getLogin } from '.';
 import Swal from 'sweetalert2';
-import { updateUser } from '../../../services/API/User.service';
-
-type Action = {
-  payload: UserModel;
-  action: string;
-}
 
 
 const initialState: AuthInteface = {
@@ -24,9 +17,7 @@ export const UserSlice = createSlice({
       state.user = action.payload;
       state.loggedIn = true;
     },
-    loggOutUser: (state) => {
-      state = initialState;
-    },
+    loggOutUser: () =>  initialState,
     updateUserData: (state, action) => {
       state.user = action.payload;
     }

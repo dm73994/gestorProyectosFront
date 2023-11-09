@@ -14,6 +14,9 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    '@typescript-eslint/no-explicit-any": "error',
+    // '@typescript-eslint/no-explicit-any': 'error',
+    'indent': ['error', 2],
+    'quotes': ['error', 'single'],
+    'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }],
   },
 }

@@ -5,29 +5,29 @@ import { InputCustom, InputType } from '../../../components'
 export const LoginForm = ({onSubmit, control, errors}) => {
   return (
     <form action="" onSubmit={onSubmit}>
-        <FormControl  sx={{ width: '100%' }}>
+      <FormControl  sx={{ width: '100%' }}>
 
-            <Controller
-                name={'username'}
-                control={control}
-                render={({ field }) => (
-                    <InputCustom name='username' errors={errors} label='Nombre de usuario' type={InputType.TEXT} field={field}/>
-                )}
-            />
+        <Controller
+          name={'username'}
+          control={control}
+          render={({ field }) => (
+            <InputCustom name='username' errors={errors} label='Nombre de usuario' type={InputType.TEXT} field={field}/>
+          )}
+        />
 
-            <Controller
-                name={'password'}
-                control={control}
-                render={({ field }) => (
-                    <InputCustom name='password' errors={errors} label='Contraseña' type={InputType.PASSWORD} field={field}/>
-                )}
-            />
+        <Controller
+          name={'password'}
+          control={control}
+          render={({ field }) => (
+            <InputCustom name='password' errors={errors} label='Contraseña' type={InputType.PASSWORD} field={field}/>
+          )}
+        />
         
-        </FormControl>
+      </FormControl>
 
-        <Button type='submit' variant='contained' fullWidth>
+      <Button type='submit' variant='contained' fullWidth>
             Iniciar sesion
-        </Button>
+      </Button>
     </form>
   )
 }

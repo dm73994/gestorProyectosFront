@@ -1,10 +1,10 @@
-import { RoleModel } from "../models";
+import { RoleModel } from '../models';
 
 export const RoleAdapter = (rol: any):RoleModel =>  {
-    const formattedRol: RoleModel = {
-        id: rol.codigoRol,
-        type: rol.tipoRol
-    }
+  const formattedRol: RoleModel = {
+    id: rol.codigoRol,
+    type: rol.tipoRol
+  }
 
-    return formattedRol;
+  return formattedRol;
 }

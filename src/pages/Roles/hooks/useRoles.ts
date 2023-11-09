@@ -8,26 +8,26 @@ import { RoleAdapter } from '../../../adapters';
 
 export const useRoles = () => {
     
-    const { callEndpoint, loading } = useFetchAndLoad();
-    const dispatch = useDispatch();
-    const [roles, setRoles] = useState<RoleModel[]>([]);
+  const { callEndpoint, loading } = useFetchAndLoad();
+  const dispatch = useDispatch();
+  const [roles, setRoles] = useState<RoleModel[]>([]);
     
-    const loadAllRoles = async() => {
-        try{
-            const {data} = await callEndpoint(getRoles());
-            const adaptedRoles = data.map((role: RoleModel) => RoleAdapter(role));
-            setRoles(adaptedRoles);
-        }catch(err){
-            throw new Error(err.message);
-        }
+  const loadAllRoles = async() => {
+    try{
+      const {data} = await callEndpoint(getRoles());
+      const adaptedRoles = data.map((role: RoleModel) => RoleAdapter(role));
+      setRoles(adaptedRoles);
+    }catch(err){
+      throw new Error(err.message);
     }
+  }
 
-    useEffect(() => {
-        loadAllRoles();
-    }, [])
+  useEffect(() => {
+    loadAllRoles();
+  }, [])
 
-    return {
-        loadAllRoles,
-        roles
-    }
+  return {
+    loadAllRoles,
+    roles
+  }
 }

@@ -1,8 +1,6 @@
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { PrivateRouterWrapper, PublicRouterWrapper } from '.'
 import { lazy } from 'react';
-import { AppStore } from '../redux/store'
-import { useSelector } from 'react-redux'
 import { UsersRoles } from '../models';
 
 const LoginSuperFix = lazy(() => import('../pages/Login/Login.page') ) 
@@ -13,20 +11,25 @@ const UpdateUserSuperFix = lazy(() => import('../pages/User/views/Update/Update.
 const RolesSuperFix = lazy(() => import('../pages/Roles/Roles.page') )
 
 // Vistas de director
-const AnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/Anteproyectos.page') )
-const RegisterAnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/RegistrarAnteproyecto.page') )
-const PropuestasSuperFix = lazy(() => import('../pages/Director/PropestaGrado/Propuestas.page') )
-const RegisterPropuestaSuperFix = lazy(() => import('../pages/Director/PropestaGrado/RegistrarPropuesta.page') )
+// const AnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/Anteproyectos.page') )
+// const RegisterAnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/RegistrarAnteproyecto.page') )
+const PropuestasSuperFix = lazy(() => import('../pages/PropuestasGrado/views/Propuestas.page') )
+const RegisterPropuestaSuperFix = lazy(() => import('../pages/PropuestasGrado/views/RegistrarPropuesta.page') )
+const ViewPropuestaSuperFix = lazy(() => import('../pages/PropuestasGrado/views/ViwePropuesta.page') )
+const NotFoundSuperFix = lazy(() => import('../pages/404/404.page') )
 
 
 
 export const AppRouter = () => {
-  const {loggedIn} = useSelector((state: AppStore) => state.user);
 
   const route = createBrowserRouter([
     {
       path: '/*',
-      element: <Navigate to={'/home'}  />
+      element: <NotFoundSuperFix />
+    },
+    {
+      path: '/',
+      element: <Navigate to={'/home'} />
     },
     {
       path: '/login',
@@ -34,7 +37,7 @@ export const AppRouter = () => {
     },
     {
       path: '/home',
-      element: <PrivateRouterWrapper component={<UserSuperFix />}  />
+      element: <PrivateRouterWrapper component={<UserSuperFix />} authorized={[]} />
     },
     {
       path: '/users',
@@ -59,8 +62,12 @@ export const AppRouter = () => {
       element: <PrivateRouterWrapper component={<PropuestasSuperFix />}  authorized={[UsersRoles.DIRECTOR]} />
     },
     {
+      path: '/propuestas/view/:id',
+      element: <PrivateRouterWrapper component={<ViewPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR, UsersRoles.JEFEDEPARTAMENTO, UsersRoles.COMITE, UsersRoles.EVALUADOR]} />
+    },
+    {
       path: '/propuestas/register',
-      element: <PrivateRouterWrapper component={<RegisterPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR]} />
+      element: <PrivateRouterWrapper component={<RegisterPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR, UsersRoles.JEFEDEPARTAMENTO, UsersRoles.COMITE, UsersRoles.EVALUADOR]} />
     },
 
   ])
