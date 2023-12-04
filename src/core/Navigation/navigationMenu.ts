@@ -1,6 +1,7 @@
+
 import { MenuModel } from '../../components/Navigation';
 import { UsersRoles } from '../../models';
-import { Home, AdminPanelSettings, Group, AddchartSharp, SubjectSharp, PlaylistAddSharp} from '@mui/icons-material';
+import { Home, AdminPanelSettings, Group, AddchartSharp, SubjectSharp, PlaylistAddSharp, FormatColorText, Description, UploadFile} from '@mui/icons-material';
 
 export const navigationMenu = () => {
 
@@ -9,7 +10,7 @@ export const navigationMenu = () => {
       icon: Home,
       path: '/home',
       text: 'Inicio',
-      allowed: [ UsersRoles.ADMIN ]
+      allowed: [ UsersRoles.ADMIN, UsersRoles.ASESOR, UsersRoles.ASISTENTEJEFE, UsersRoles.COMITE, UsersRoles.COORDINADOR, UsersRoles.DIRECTOR, UsersRoles.ESTUDIANTE, UsersRoles.EVALUADOR, UsersRoles.JEFEDEPARTAMENTO ]
     },
     {
       icon: Group,
@@ -27,7 +28,7 @@ export const navigationMenu = () => {
       icon: AddchartSharp,
       path: '/propuestas',
       text: 'Propuestas de grado',
-      allowed: [ UsersRoles.DIRECTOR ],
+      allowed: [ UsersRoles.DIRECTOR, UsersRoles.COMITE, UsersRoles.COORDINADOR ],
       children: [
         {
           icon: PlaylistAddSharp,
@@ -39,62 +40,62 @@ export const navigationMenu = () => {
           icon: SubjectSharp,
           path: '/consult',
           text: 'Consultar propuestas',
-          allowed: [ UsersRoles.DIRECTOR ]
+          allowed: [ UsersRoles.DIRECTOR, UsersRoles.COMITE, UsersRoles.COORDINADOR ]
         },
       ]
     },
     {
-      icon: AdminPanelSettings,
-      path: '/anteproyecto',
+      icon: FormatColorText,
+      path: '/anteproyectos',
       text: 'Anteproyecto',
-      allowed: [ UsersRoles.DIRECTOR ],
+      allowed: [ UsersRoles.JEFEDEPARTAMENTO, UsersRoles.DIRECTOR, UsersRoles.COORDINADOR, UsersRoles.ASESOR, UsersRoles.EVALUADOR,  ],
       children: [
         {
-          icon: AdminPanelSettings,
+          icon: UploadFile,
           path: '/register',
           text: 'Registrar Anteproyecto',
-          allowed: [ UsersRoles.DIRECTOR ]
+          allowed: [ UsersRoles.JEFEDEPARTAMENTO, UsersRoles.DIRECTOR, UsersRoles.COORDINADOR, UsersRoles.ASESOR, UsersRoles.EVALUADOR ]
         },
         {
-          icon: AdminPanelSettings,
+          icon: Description,
           path: '/consult',
           text: 'Consultar Anteproyectos',
-          allowed: [ UsersRoles.DIRECTOR ]
+          allowed: [ UsersRoles.JEFEDEPARTAMENTO, UsersRoles.DIRECTOR, UsersRoles.COORDINADOR, UsersRoles.ASESOR, UsersRoles.EVALUADOR ]
         },
       ]
     },
-    {
-      icon: AdminPanelSettings,
-      path: '/trabajoGrado',
-      text: 'Trabajo de grado',
-      allowed: [ UsersRoles.ADMIN ],
-      children: [
-        {
-          icon: AdminPanelSettings,
-          path: '/extensionRequest',
-          text: 'Solicitar Prorroga',
-          allowed: [ UsersRoles.ADMIN ]
-        },
-        {
-          icon: AdminPanelSettings,
-          path: '/edit',
-          text: 'Modificar',
-          allowed: [ UsersRoles.ADMIN ]
-        },
-        {
-          icon: AdminPanelSettings,
-          path: '/cancel',
-          text: 'Cancelar',
-          allowed: [ UsersRoles.ADMIN ]
-        },
-        {
-          icon: AdminPanelSettings,
-          path: '/suspent',
-          text: 'Cancelar',
-          allowed: [ UsersRoles.ADMIN ]
-        },
-      ]
-    },
+    // {
+    //   icon: AdminPanelSettings,
+    //   path: '/trabajoGrado',
+    //   text: 'Trabajo de grado',
+    //   allowed: [ UsersRoles.ADMIN ],
+    //   children: [
+    //     {
+    //       icon: AdminPanelSettings,
+    //       path: '/extensionRequest',
+    //       text: 'Solicitar Prorroga',
+    //       allowed: [ UsersRoles.ADMIN ]
+    //     },
+    //     {
+    //       icon: AdminPanelSettings,
+    //       path: '/edit',
+    //       text: 'Modificar',
+    //       allowed: [ UsersRoles.ADMIN ]
+    //     },
+    //     {
+    //       icon: AdminPanelSettings,
+    //       path: '/cancel',
+    //       text: 'Cancelar',
+    //       allowed: [ UsersRoles.ADMIN ]
+    //     },
+    //     {
+    //       icon: AdminPanelSettings,
+    //       path: '/suspent',
+    //       text: 'Cancelar',
+    //       allowed: [ UsersRoles.ADMIN ]
+    //     },
+    //   ]
+    // },
         
   ]
 

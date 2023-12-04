@@ -1,5 +1,4 @@
-import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, styled, Container, Card, Grid, CardContent } from '@mui/material';
-import React from 'react'
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, styled, Container, Grid, CardContent } from '@mui/material';
 import { useRoles } from './hooks/useRoles';
 import { StyledCard } from '../../styled-components';
 import { theme } from '../../services';

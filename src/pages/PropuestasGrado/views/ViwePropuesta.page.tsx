@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StyledCard } from '../../../styled-components'
 import { useParams } from 'react-router-dom'
 import { DetailsPropuesta } from '../../../models/Formatos/DetailsPropuesta.model';
-import { CustomButton, CustomDivider, CustomLoader } from '../../../components';
+import { BackButton, CustomButton, CustomDivider, CustomLoader } from '../../../components';
 import { Box, Grid, Typography } from '@mui/material';
 import { DownloadForOffline, FactCheck, NotInterested, RateReview } from '@mui/icons-material';
 import { AproveModal, PropuestaCard, ReviewModal, usePropuesta, useReviewModal } from '..';
@@ -10,15 +10,10 @@ import { useAproveModal } from '../hooks/useAproveModal';
 
 const ViwePropuesta = () => {
 
-  const { id } = useParams();
+  const { id, type } = useParams();
   const [ propuesta, setPropuesta ] = useState<DetailsPropuesta>(null);
 
-  const {
-    getPropuestaById,
-    loading,
-    currentUser,
-    handleDownload,
-  } = usePropuesta();
+  const propuestaHandler = usePropuesta({ type: type });
 
   const {
     openAprove,
@@ -34,19 +29,22 @@ const ViwePropuesta = () => {
   
 
   const handleLoadPropuesta = async () => {
-    const data = await getPropuestaById(parseInt(id));
+    const data = await propuestaHandler.consultPropuestaById(parseInt(id));
     setPropuesta( data );
-    console.log('popuesta', data)
   }
 
   useEffect(() => {
     handleLoadPropuesta();
   }, [])
 
-  if(loading || !propuesta) return <CustomLoader />
+  if(propuestaHandler.loading || !propuesta) return <CustomLoader />
+  if(!propuestaHandler) return <Typography variant='h6' textAlign={'center'}> Internal Error :( </Typography>
 
   return (
-    <StyledCard sx={{ padding: '2rem 6rem'}}>
+    <StyledCard sx={{ padding: '2rem 6rem', position: 'relative'}}>
+      <Box sx={{ position: 'absolute', top: 10, left: 10 }} >
+        <BackButton path={'/propuestas/consult'} />
+      </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant='h6' textAlign={'center'} sx={{ flexGrow: 2 }}> {propuesta.title} </Typography>
       </Box>
@@ -70,28 +68,29 @@ const ViwePropuesta = () => {
           gap={4}
           p={2}
         >
-          {currentUser.permissions.propuesta.download && (
-            <CustomButton 
-              text='DESCARGAR PROPUESTA' 
-              onClick={() => handleDownload(propuesta.idPropuesta, propuesta.estudiantes[0].username)} 
-              startIcon={<DownloadForOffline />} 
-            />
-          )}
-          {currentUser.permissions.propuesta.download && propuesta.aproved && (
+
+          <CustomButton 
+            text='DESCARGAR PROPUESTA' 
+            onClick={() => propuestaHandler.handleDownload(propuesta.idPropuesta, propuesta.estudiantes[0].username)} 
+            startIcon={<DownloadForOffline />} 
+          />
+
+          {propuestaHandler.currentUser.permissions.propuesta.download && propuesta.avalado && (
             <CustomButton 
               text='DESCARGAR AVAL' 
-              onClick={() => handleDownload(propuesta.idPropuesta, propuesta.estudiantes[0].username)} 
+              onClick={() => propuestaHandler.handleDownloadAproved(propuesta.idPropuesta, propuesta.estudiantes[0].username)} 
               startIcon={<DownloadForOffline />} 
             />
           )}
-          {currentUser.permissions.propuesta.review && propuesta.aproved === null && (
+
+          {propuestaHandler.currentUser.permissions.propuesta.review === true && (
             <CustomButton 
               text='Agregar revisión' 
               onClick={handleOpenReview} 
               startIcon={<RateReview />} 
             />
           )}
-          {currentUser.permissions.propuesta.aprove && propuesta.aproved === null && (
+          {propuestaHandler.currentUser.permissions.propuesta.aprove && propuesta.avalado === null && (
             <CustomButton 
               text='Avalar propuesta' 
               onClick={handleOpenAprove} 
@@ -99,7 +98,7 @@ const ViwePropuesta = () => {
               color='success.main'
             />  
           )}
-          {currentUser.permissions.propuesta.aprove && propuesta.aproved === null && (
+          {propuestaHandler.currentUser.permissions.propuesta.aprove && propuesta.avalado === null && (
             <CustomButton 
               text='Rechazar propuesta' 
               onClick={() => {}} 

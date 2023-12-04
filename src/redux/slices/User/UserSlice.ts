@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { AuthInteface } from '../../../models';
-import { getLogin } from '.';
-import Swal from 'sweetalert2';
 
 
 const initialState: AuthInteface = {
@@ -22,29 +20,29 @@ export const UserSlice = createSlice({
       state.user = action.payload;
     }
   },
-  extraReducers(builder) {
-    // PENDING LOGIN CASE
-    // builder.addCase(getLogin.pending, (state) => {
-    //   state.loggedIn = 'loading';
-    // });
+  //extraReducers(builder) {
+  // PENDING LOGIN CASE
+  // builder.addCase(getLogin.pending, (state) => {
+  //   state.loggedIn = 'loading';
+  // });
 
-    // LOGIN SUCCESS
-    builder.addCase(getLogin.fulfilled, (state, action) => {
-      state.loggedIn = true;
-      state.user = action.payload;
-    });
+  // LOGIN SUCCESS
+  // builder.addCase(getLogin.fulfilled, (state, action) => {
+  //   state.loggedIn = true;
+  //   state.user = action.payload;
+  // });
 
-    // LOGIN FAIL
-    builder.addCase(getLogin.rejected, (state, action) => {
-      state = initialState;
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
-        footer: `<a href="">${action.error.message}</a>`
-      })
-    });
-  },
+  // // LOGIN FAIL
+  // builder.addCase(getLogin.rejected, (state, action) => {
+  //   state = initialState;
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Oops...',
+  //     text: 'Something went wrong!',
+  //     footer: `<a href="">${action.error.message}</a>`
+  //   })
+  // });
+  //},
 })
 
 // Action creators are generated for each case reducer function

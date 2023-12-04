@@ -3,9 +3,10 @@ import { useFetchAndLoad } from '../../../hooks';
 import { ReviewModel, TipoPropuesta } from '..';
 import { UserModel } from '../../../models';
 import { useSelector } from 'react-redux';
-import { addReviewTI } from '../../../services';
+import { addReviewPP, addReviewTI } from '../../../services';
 import Swal from 'sweetalert2';
 import { AppStore } from '../../../redux/store';
+// import { Client } from '@stomp/stompjs';
 
 export const useReviewModal = () => {
     
@@ -32,9 +33,10 @@ export const useReviewModal = () => {
     }
 
     try{
-      if(type === TipoPropuesta.TI){
-        await callEndpoint(addReviewTI(reviewData));
-      }
+
+      if(type === TipoPropuesta.TI) await callEndpoint(addReviewTI(reviewData));
+      else if(type === TipoPropuesta.PP) await callEndpoint(addReviewPP(reviewData));
+      
       Swal.fire({
         title: 'Revisión enviada',
         text: 'La revisión se ha enviado correctamente',

@@ -1,14 +1,16 @@
 import { useTheme } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
-import { LoginModel } from '../../../models';
+import { LoginModel, permissionsModel } from '../../../models';
 import { defaultLoginValues, loginSchema } from '..';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { login } from '../../../services';
-import { useDispatch } from 'react-redux';
 import { useFetchAndLoad } from '../../../hooks';
 import { loggInUser } from '../../../redux/slices/User/UserSlice';
 import { UserAdapter } from '../../../adapters';
 import Swal from 'sweetalert2';
+import { getRoles } from '../../../redux';
+import { useAppDispatch } from '../../../redux/store';
+import { filterPermissionsByRole } from '../../../utils';
 
 
 
@@ -16,7 +18,7 @@ import Swal from 'sweetalert2';
 export const useLogin = () => {
   const theme = useTheme();
   const {callEndpoint} = useFetchAndLoad();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {register, control, handleSubmit, formState: { errors }} = useForm({
     resolver: yupResolver(loginSchema),
@@ -30,7 +32,20 @@ export const useLogin = () => {
     try{
       const resp = await callEndpoint(login(data));
       const user = UserAdapter(resp.data);
+
+      /**
+       * Ajustamos los permisos del usuario logueado en el store de redux  
+      */
+      const rolesRaw: string[] = user.roles.map( rol => rol.type)
+      const permissions: permissionsModel = filterPermissionsByRole(rolesRaw);
+
+      user.permissions = permissions;
+
+      /**
+       * Guardamos el usuario en el store de redux
+      */
       dispatch(loggInUser(user));
+      dispatch(getRoles());
     }catch(err){
       Swal.fire({
         title: 'Error!',

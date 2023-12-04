@@ -1,18 +1,19 @@
-import { Phone, PhoneMissed, Favorite, PersonPin, Settings } from '@mui/icons-material';
-import { Tabs, Tab, styled, Box } from '@mui/material';
+import { Inbox, Settings } from '@mui/icons-material';
+import { Box } from '@mui/material';
 import React from 'react'
 import { useState } from 'react';
-import { UserModel } from '../../../../models/user/User.model';
 import { AntTabs, AntTab, TabPanel } from '../../../../styled-components';
 import { UserForm } from '../../components';
+import { AuthInteface, CRUDActions } from '../../../../models';
+import { UserInbox } from './UserInbox';
+import { useSelector } from 'react-redux';
+import { AppStore } from '../../../../redux/store';
 
 
-interface IUserActionsTabsProps {
-  user: UserModel;
-}
+export const UserActionsTabs = () => {
 
-export const UserActionsTabs = ({user}: IUserActionsTabsProps) => {
-
+  const userState: AuthInteface  = useSelector((state: AppStore) =>  state.user);
+  const {user} = userState;
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -21,9 +22,16 @@ export const UserActionsTabs = ({user}: IUserActionsTabsProps) => {
 
   const optionTabs = [
     {
+      index: 0,
+      label: 'Bandeja de entrada',
+      icon: <Inbox />,
+      content: <UserInbox />
+    },
+    {
+      index: 1,
       label: 'Editar',
       icon: <Settings />,
-      content: <UserForm user={user} />
+      content: <UserForm user={user} action={CRUDActions.READ} />
     },
   ]
 
@@ -42,7 +50,7 @@ export const UserActionsTabs = ({user}: IUserActionsTabsProps) => {
       </AntTabs>
 
       {optionTabs.map((option) => (
-        <TabPanel key={option.label} value={value} index={0}>
+        <TabPanel key={option.label} value={value} index={option.index}>
           {option.content}
         </TabPanel>
       ))}

@@ -1,5 +1,42 @@
 import { RoleModel, UserModel, permissionsModel } from '../models'
-import { filterPermissionsByRole } from '../utils';
+
+const initialRoles: permissionsModel = {
+  user: {
+    edit: false,
+    add: false,
+    consult: false,
+    view: false,
+    active: false,
+  },
+  role: {
+    edit: false,
+    add: false,
+    consult: false,
+    view: false
+  },
+  propuesta: {
+    add: false,
+    viewAll: false,
+    viewOwner: false,
+    download: false,
+    aprove: false,
+    review: false,
+  },
+  anteproyecto: {
+    addAnteproyecto: false,
+    addVersion: false,
+    addReview: false,
+    addEvaluator: false,    
+    download: false,    
+    viewReviews: false,
+    viewAll: false,
+    viewOwner: false,
+    viewEvaluator: false,    
+    aprove: false,
+    reject: false,
+    viewAccepted: false,
+  }
+}
 
 export const UserAdapter = (superUser: any): UserModel => {
 
@@ -8,23 +45,21 @@ export const UserAdapter = (superUser: any): UserModel => {
   const roles: RoleModel[] = superUser.roles.map((rol: any) => {
     return {
       id: rol.codigoRol,
-      type: rol.tipoRol
+      type: rol.tipoRol,
+      state: undefined
     }
   });
-
-  const permissions: permissionsModel = filterPermissionsByRole(roles);
 
   const formattedUser: UserModel = {
     id: superUser.identificacionUsuario,
     name: superUser.nombresUsuario,
     lastname: superUser.apellidosUsuario,
     username: superUser.loginUsuario.userNameLogin,
-    password: superUser.loginUsuario.contraseñaLogin,
     token: '',
     state: superUser.estadoUsuario === 1 ? true : false,
     email: superUser.emailUsuario,
     roles,
-    permissions
+    permissions: initialRoles
   }
     
   return formattedUser

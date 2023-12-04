@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { useFetchAndLoad } from '../../../hooks';
 import { UserModel } from '../../../models';
 import { AppStore } from '../../../redux/store';
-import { addReviewTI, aprovePropuestaTI } from '../../../services';
+import { addReviewPP, addReviewTI, aprovePropuestaPP, aprovePropuestaTI } from '../../../services';
 
 export const useAproveModal = () => {
 
@@ -31,6 +31,9 @@ export const useAproveModal = () => {
       if(type === TipoPropuesta.TI){
         await callEndpoint(addReviewTI(reviewData));
         await callEndpoint(aprovePropuestaTI(propuestaId, data.aproveFile, currentUser.id));
+      }else if(type === TipoPropuesta.PP){
+        await callEndpoint(addReviewPP(reviewData));
+        await callEndpoint(aprovePropuestaPP(propuestaId, data.aproveFile, currentUser.id));
       }
       Swal.fire({
         title: 'PROPUESTA AVALADA',
@@ -68,6 +71,6 @@ export const useAproveModal = () => {
     handleAddComment,
     handleAddAproveFile,
     openAprove,
-    data
+    data,
   }
 }

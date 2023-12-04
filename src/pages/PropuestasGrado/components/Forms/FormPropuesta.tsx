@@ -128,7 +128,7 @@ export const FormPropuesta = ({ type }: {type: TipoPropuesta}) => {
           {!!dataPropuesta.asistente && (
             <Grid item md={12}>
               <LittleUserCard 
-                user={dataPropuesta.codirector} 
+                user={dataPropuesta.asistente} 
                 title={'Asistente'} 
                 color={green[200]} 
                 isDelete 
@@ -138,7 +138,7 @@ export const FormPropuesta = ({ type }: {type: TipoPropuesta}) => {
           )}
 
           {dataPropuesta.estudiantes?.map((estudiante) => 
-            <Grid item md={12}>
+            <Grid item md={12} key={estudiante.id}>
               <LittleUserCard 
                 user={estudiante} 
                 title={'Estudiante'} 
@@ -173,8 +173,10 @@ export const FormPropuesta = ({ type }: {type: TipoPropuesta}) => {
 
           
           {/* subir archivo  */}
-          <Grid item md={12} display={'flex'} justifyContent={'center'}>
-            <FileUploader setUploadedFile={handleUpdateFile} uploadedFile={dataPropuesta.file} />
+          <Grid item md={12}>
+            <Box height={300} width={'100%'} display={'flex'} justifyContent={'center'}>
+              <FileUploader setUploadedFile={handleUpdateFile} uploadedFile={dataPropuesta.file} />
+            </Box>
           </Grid> 
         </Grid>
 

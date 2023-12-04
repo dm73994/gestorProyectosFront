@@ -15,7 +15,7 @@ export const App = () => {
     <>
       <Suspense fallback={<Loader />}>
         <Provider store={store}>
-          <PersistGate loading={<Loader />} persistor={persistor}>
+          <PersistGate loading={<Loader />} persistor={persistor}>         
             <ThemeProvider theme={theme}>
               <NavigationProvider>
                 <CssBaseline />

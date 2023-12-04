@@ -25,7 +25,7 @@ const UserPage = () => {
         <Grid item md={8} sm={1} sx={{ height: '100%' }} >
           <StyledCard sx={{ }}>
             <CardContent>
-              <UserActionsTabs user={user} />
+              <UserActionsTabs />
             </CardContent>
           </StyledCard>
         </Grid>

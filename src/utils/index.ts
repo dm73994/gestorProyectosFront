@@ -6,3 +6,4 @@ export * from './filterUserRoles';
 export * from './formValidation';
 export * from './getInitialsName';
 export * from './loadAbortAxios.utils';
+export * from './validateForm';

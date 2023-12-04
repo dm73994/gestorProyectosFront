@@ -12,5 +12,5 @@ export type DetailsPropuesta = {
   revisiones: DetailsReviewModel[],
   fileName: string,
   type: TipoPropuesta,
-  aproved: string | undefined,
+  avalado: string | undefined,
 }

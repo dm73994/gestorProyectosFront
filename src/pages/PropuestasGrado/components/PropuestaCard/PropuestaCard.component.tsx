@@ -28,7 +28,7 @@ export const PropuestaCard = ({ props }: IPropuestaCard) => {
             </Grid>
           )}
           {props.estudiantes.map( (estudiante: UserModel) => (
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4} key={estudiante.id}>
               <UserBrief title={'Estudiante'} {...estudiante} />
             </Grid>
           ))}
@@ -44,13 +44,13 @@ export const PropuestaCard = ({ props }: IPropuestaCard) => {
           <Grid item xs={12} md={6} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'} >
             <Typography variant='body2' textAlign={'center'}> Estado del documento </Typography>
             <Box sx={{ 
-              backgroundColor: `${props.aproved !== null ? 'success.main' : 'warning.main'}`, 
+              backgroundColor: `${props.avalado !== null ? 'success.main' : 'warning.main'}`, 
               color: '#fff', 
               padding: '4px 16px', 
               borderRadius: '5px',
               ml: 2 
             }}>
-              <Typography variant='body2' textAlign={'center'}> {props.aproved === null ? 'REVISIÓN' : 'APROVADO'} </Typography>
+              <Typography variant='body2' textAlign={'center'}> {props.avalado === null ? 'REVISIÓN' : 'AVALADO'} </Typography>
             </Box>
           </Grid>
 

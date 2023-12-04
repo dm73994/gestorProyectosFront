@@ -1,5 +1,5 @@
 import { Email, Circle, ManageAccounts, BadgeOutlined } from '@mui/icons-material'
-import { CardContent, Box, Avatar, Typography, Divider, Badge } from '@mui/material'
+import { CardContent, Box, Avatar, Typography, Divider } from '@mui/material'
 import { deepPurple, green, red } from '@mui/material/colors'
 import React from 'react'
 import { InfoText } from '..'

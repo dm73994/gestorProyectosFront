@@ -10,21 +10,27 @@ const CreateUserSuperFix = lazy(() => import('../pages/User/views/create/CreateU
 const UpdateUserSuperFix = lazy(() => import('../pages/User/views/Update/Update.page') )
 const RolesSuperFix = lazy(() => import('../pages/Roles/Roles.page') )
 
-// Vistas de director
-// const AnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/Anteproyectos.page') )
-// const RegisterAnteproyectoSuperFix = lazy(() => import('../pages/Director/Anteproyecto/RegistrarAnteproyecto.page') )
-const PropuestasSuperFix = lazy(() => import('../pages/PropuestasGrado/views/Propuestas.page') )
-const RegisterPropuestaSuperFix = lazy(() => import('../pages/PropuestasGrado/views/RegistrarPropuesta.page') )
-const ViewPropuestaSuperFix = lazy(() => import('../pages/PropuestasGrado/views/ViwePropuesta.page') )
 const NotFoundSuperFix = lazy(() => import('../pages/404/404.page') )
 
+// Vistas Propuestas formato A 
+const PropuestasSuperFix = lazy(() => import('../pages/PropuestasGrado/views/Propuestas.page') )
+const RegisterPropuestaSuperFix = lazy(() => import('../pages/PropuestasGrado/views/RegisterPropuesta/RegistrarPropuesta.page') )
+const ViewPropuestaSuperFix = lazy(() => import('../pages/PropuestasGrado/views/ViwePropuesta.page') )
 
+// Vistas Anteproyecto formato B
+const RegisterAnteproyectoSuperFix = lazy(() => import('../pages/Anteproyecto/views/create/RegistrarAnteproyecto.page') )
+const ConsultAnteproyectoSuperFix = lazy(() => import('../pages/Anteproyecto/views/list/Anteproyectos.page') )
+const ViewAnteproyectoSuperFix = lazy(() => import('../pages/Anteproyecto/views/consult/ConsultAnteproyecto.page') )
 
 export const AppRouter = () => {
 
   const route = createBrowserRouter([
     {
       path: '/*',
+      element: <NotFoundSuperFix />
+    },
+    {
+      path: '/404',
       element: <NotFoundSuperFix />
     },
     {
@@ -52,22 +58,40 @@ export const AppRouter = () => {
       element: <PrivateRouterWrapper component={<UpdateUserSuperFix />}  authorized={[UsersRoles.ADMIN]} />
     },
     {
+      path: '/users/update',
+      element: <PrivateRouterWrapper component={<UpdateUserSuperFix />}  authorized={[UsersRoles.ADMIN]} />
+    },
+    {
       path: '/roles',
       element: <PrivateRouterWrapper component={<RolesSuperFix />}  authorized={[UsersRoles.ADMIN]} />
     },
 
-    // RUTAS DIRECTOR
+    // RUTAS PROPUESTA TIPO A
     {
       path: '/propuestas/consult',
-      element: <PrivateRouterWrapper component={<PropuestasSuperFix />}  authorized={[UsersRoles.DIRECTOR]} />
+      element: <PrivateRouterWrapper component={<PropuestasSuperFix />}  authorized={[UsersRoles.DIRECTOR, UsersRoles.JEFEDEPARTAMENTO, UsersRoles.COMITE, UsersRoles.EVALUADOR, UsersRoles.COMITE, UsersRoles.COORDINADOR]} />
     },
     {
-      path: '/propuestas/view/:id',
-      element: <PrivateRouterWrapper component={<ViewPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR, UsersRoles.JEFEDEPARTAMENTO, UsersRoles.COMITE, UsersRoles.EVALUADOR]} />
+      path: '/propuestas/view/:type/:id',
+      element: <PrivateRouterWrapper component={<ViewPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR, UsersRoles.JEFEDEPARTAMENTO, UsersRoles.COMITE, UsersRoles.EVALUADOR, UsersRoles.COORDINADOR]} />
     },
     {
       path: '/propuestas/register',
-      element: <PrivateRouterWrapper component={<RegisterPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR, UsersRoles.JEFEDEPARTAMENTO, UsersRoles.COMITE, UsersRoles.EVALUADOR]} />
+      element: <PrivateRouterWrapper component={<RegisterPropuestaSuperFix />}  authorized={[UsersRoles.DIRECTOR]} />
+    },
+
+    // RUTAS ANTEPROYECTO TIPO B
+    {
+      path: '/anteproyectos/consult',
+      element: <PrivateRouterWrapper component={<ConsultAnteproyectoSuperFix />}  authorized={[]} />
+    },
+    {      
+      path: '/anteproyectos/view/:type/:id',
+      element: <PrivateRouterWrapper component={<ViewAnteproyectoSuperFix />}  authorized={[]} />
+    },
+    {
+      path: '/anteproyectos/register',
+      element: <PrivateRouterWrapper component={<RegisterAnteproyectoSuperFix />}  authorized={[]} />
     },
 
   ])

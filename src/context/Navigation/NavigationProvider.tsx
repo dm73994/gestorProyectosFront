@@ -1,5 +1,4 @@
 import { useReducer} from 'react'
-import { Provider } from 'react-redux';
 import { NavigationContext } from './NavigationContex';
 import { NavigationReducer } from '.';
 import { NavigationActionReducerModel } from '../../models';

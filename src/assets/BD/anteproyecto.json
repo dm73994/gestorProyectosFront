@@ -1,0 +1,52 @@
+{
+    "idAnteproyecto": 1,
+    "director": {
+
+    },
+    "estudiante1": {
+
+    },
+    "revisiones": [
+        {
+            "idRevision": 1,
+            "fecha": "2019-05-05",
+            "observaciones": "Observaciones de la revision 1",
+            "estado": "Aprobado",
+            "Idevaludor": 1
+        },
+        {
+            "idRevision": 2,
+            "fecha": "2019-05-05",
+            "observaciones": "Observaciones de la revision 2",
+            "estado": "Aprobado",
+            "Idevaludor": 1
+        },
+        {
+            "idRevision": 3,
+            "fecha": "2019-05-05",
+            "observaciones": "Observaciones de la revision 3",
+            "estado": "Aprobado",
+            "Idevaludor": 2
+        }
+    ],
+    "evaludores": [
+        {
+            "idEvaluador": 1,
+            "nombre": "Evaluador 1",
+            "apellido": "Apellido 1",
+            "correo": ""
+        },
+        {
+            "idEvaluador": 2,
+            "nombre": "Evaluador 2",
+            "apellido": "Apellido 2",
+            "correo": ""
+        },
+        {
+            "idEvaluador": 3,
+            "nombre": "Evaluador 3",
+            "apellido": "Apellido 3",
+            "correo": ""
+        }
+    ]
+}

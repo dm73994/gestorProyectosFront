@@ -2,10 +2,23 @@ import { SwapVert } from '@mui/icons-material'
 import { Box, Button, Typography, Menu, MenuItem } from '@mui/material'
 import React, { useState } from 'react'
 
-const FiltroOrder = () => {
 
+type FilterButtonProps = {
+  title: string;
+  action: () => void;
+}
+
+interface IFilterProps{
+  title: string;
+  actions: FilterButtonProps[];
+}
+
+export const FilterButton = ({title, actions}: IFilterProps) => {
+
+  const [curretAction, setCurrentAction] = useState<string>(title) // actions[0
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   
   const handleClose = async() => {
     setAnchorEl(null);
@@ -16,17 +29,16 @@ const FiltroOrder = () => {
   
 
   return (
-    <Box>
+    <Box sx={{ height: '100%'}}>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+        <SwapVert color='info' sx={{ width: 32, height: 32 }} />
         <Button
           onClick={handleClick}
-          size="small"
-          sx={{ ml: 2 }}
+          sx={{ ml: 2, width: '10rem' }}
           variant='outlined'
         >
-          <SwapVert color='info' />
-          <Typography variant='caption'>
-          Ordenar
+          <Typography sx={{ flexBasis: '5rem' }}>
+            {curretAction}
           </Typography>
         
         </Button>
@@ -64,17 +76,16 @@ const FiltroOrder = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClick} sx={{ display: 'flex', justifyContent: 'space-between' }} >
-          <Typography variant='body2'>Más recientes</Typography>
-        </MenuItem>
-
-        <MenuItem onClick={handleClick} sx={{ display: 'flex', justifyContent: 'space-between' }} >
-          <Typography variant='body2'>Más antiguos</Typography>
-        </MenuItem>
+        {actions.map((action) => (
+          <MenuItem 
+            onClick={() => {action.action(); setCurrentAction(action.title) }} 
+            sx={{ display: 'flex', justifyContent: 'space-between' }} 
+          >
+            <Typography variant='body2'>{action.title}</Typography>
+          </MenuItem>
+        ))}
 
       </Menu>
     </Box>
   )
 }
-
-export default FiltroOrder

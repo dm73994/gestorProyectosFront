@@ -1,2 +1,2 @@
-export { default as AnteproyectosPage } from './Anteproyectos.page';
-export { default as RegistrarAnteproyectoPage } from './RegistrarAnteproyecto.page';
+export * from './views/create';
+export * from './views/list';

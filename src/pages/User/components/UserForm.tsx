@@ -1,22 +1,22 @@
-import React from 'react'
 import { RoleModel, UserModel } from '../../../models';
-import { Box, Button, Divider, FormControl, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Button, Divider, FormControl, Grid, Typography } from '@mui/material';
 import { Controller } from 'react-hook-form';
-import { InputCustom, InputType, RenderRolesComponent, UserStateComponent } from '../../../components';
+import { BackButton, CustomLoader, InputCustom, InputType, RenderRolesComponent, UserStateComponent } from '../../../components';
 import { useUserForm } from '..';
 import { useState, useEffect } from 'react';
 import { theme } from '../../../services/Theme/theme.service';
-import { AddCircleSharp, Cancel } from '@mui/icons-material';
-import { PinkSwitch, StyledCard } from '../../../styled-components';
+import { PinkSwitch, StyledCard, StyledInput } from '../../../styled-components';
+import { useNavigate } from 'react-router-dom';
+import { CRUDActions } from '../../../models/Actions/CRUDActions.model';
+import { filterUserRoles } from '../../../utils';
 
 interface IUserFormPageProps {
     user: UserModel;
+    action: CRUDActions;
 }
 
-
-
-export const UserForm = ({user}: IUserFormPageProps) => {
-  const [editing, setEditing] = useState<boolean>(user == null ? false : true);
+export const UserForm = ({user, action}: IUserFormPageProps) => {
+  
   const [toggle, setToggle] = useState<boolean>(true);
   const {
     control,
@@ -26,18 +26,11 @@ export const UserForm = ({user}: IUserFormPageProps) => {
     user: currentUser,
     setValue,
     roles,
-    loadRoles,
     setRoles,
+    loading,
+    getValues
   } = useUserForm({user});
-
-  const onHandleEdit = () => {
-    setEditing(false);
-  }
-
-  const onHandleUpdate = (e) => {
-    onUpdate(e)
-    setEditing(true);
-  }
+  const navigate = useNavigate()
 
   // Controlador de toggle button para controlar el estado editando o creando usuarios
   const onStatusChange= () => {
@@ -52,56 +45,87 @@ export const UserForm = ({user}: IUserFormPageProps) => {
       role.state = 'add';
     }
     setRoles(roles.map( r => r.id === role.id ? role : r));
-    const r = roles.filter( r => r.state === 'add');
+    const r = roles.filter( r => r.state === 'remove');
 
     setValue('roles', r);
   }
 
   useEffect(() => {
-    loadRoles();
-  }, [])
+    if(action !== CRUDActions.READ){
+      const rolesUserToUpdate = filterUserRoles(user);
+      /**
+       * Si el usuario existe y se esta actualizando se debe filtrar los roles que tiene el usuario
+       * y compararlos con los roles qu¿e el usuario ya tiene asignados
+       */
+      const updatesRoles: RoleModel[] = roles.map(rol => {
+        if( rolesUserToUpdate.includes(rol.type) ) 
+          return {...rol, state: 'remove'}        
+        return {...rol, state: 'add'}
+      })
+      /**
+       * Se actualizan los roles del usuario dentro del formulario
+      */
+      setRoles( updatesRoles )
 
+    }
+  }, [])
+  
   return (
     <Box sx={{ width: '100%'}}>
 
-      <Box display={'flex'} justifyContent={'space-between'} mb={2}>
-        <Typography> DATOS DE USUARIO </Typography>
-                
-        {user && currentUser.permissions.user.edit && editing && (
-          <Button variant='contained' onClick={onHandleEdit} color='info' sx={{ width: '10rem' }}>
-                        EDITAR
-          </Button>
-        )}
-        {user && currentUser.permissions.user.edit && !editing && (
-          <Button 
-            variant='contained' 
-            onClick={onHandleUpdate} 
-            color='success' 
-            sx={{ 
-              color: '#fff', 
-              width: '10rem' 
-            }}>
-                        ACTUALIZAR
-          </Button>
-        )}
-        {!user && currentUser.permissions.user.add && (
-          <Button 
-            type='submit'
-            variant='contained' 
-            onClick={onCreate} 
-            color='success' 
-            sx={{ 
-              color: '#fff', 
-              width: '10rem' 
-            }}>
-                        CREAR USUARIO
-          </Button>
-        )}
-      </Box>
-            
-      <Divider sx={{ mb: 4}} />
-
+      {loading && (
+        <CustomLoader />
+      )}
       <form>
+        <Box display={'flex'} justifyContent={'space-between'} mb={2}>
+          {action !== CRUDActions.READ && (
+            <BackButton />
+          )}
+
+          <Typography> DATOS DE USUARIO </Typography>
+                
+          {user && currentUser.permissions.user.edit && action === CRUDActions.READ && (
+            <Button 
+              variant='contained' 
+              onClick={() => navigate('/users/update')} 
+              color='info' 
+              sx={{ width: '10rem' }}
+            >
+            EDITAR
+            </Button>
+          )}
+          {user && currentUser.permissions.user.edit && action === CRUDActions.UPDATE && (
+            <Button 
+              type='submit'
+              variant='contained' 
+              onClick={onUpdate}
+              color='success' 
+              sx={{ 
+                color: '#fff', 
+                width: '10rem' 
+              }}
+            >
+              ACTUALIZAR
+            </Button>
+          )}
+          {!user && currentUser.permissions.user.add && action === CRUDActions.CREATE && (
+            <Button 
+              type='submit'
+              variant='contained' 
+              onClick={onCreate} 
+              color='success' 
+              sx={{ 
+                color: '#fff', 
+                width: '10rem' 
+              }}>
+              CREAR USUARIO
+            </Button>
+          )}
+        </Box>
+            
+        <Divider sx={{ mb: 4}} />
+
+      
         <FormControl>
           <Grid container spacing={2} sx={{ mr: 0}}>
             {!user && (
@@ -136,7 +160,7 @@ export const UserForm = ({user}: IUserFormPageProps) => {
                     label='Nombre de usuario'
                     type={InputType.TEXT}
                     field={field}
-                    disabled={editing}
+                    disabled={action === CRUDActions.READ}
                     value={user && `${user.username}`}
                   />
                 )}
@@ -153,7 +177,7 @@ export const UserForm = ({user}: IUserFormPageProps) => {
                     label='Nombre'
                     type={InputType.TEXT}
                     field={field}
-                    disabled={editing}
+                    disabled={action === CRUDActions.READ}
                     value={user && `${user.name}`}
                   />
                 )}
@@ -170,28 +194,45 @@ export const UserForm = ({user}: IUserFormPageProps) => {
                     label='Apellido'
                     type={InputType.TEXT}
                     field={field}
-                    disabled={editing}
+                    disabled={action === CRUDActions.READ}
                     value={user && `${user.lastname}`}
                   />
                 )}
               />
             </Grid>
-            <Grid item md={12}>
-              <Controller
-                name={'email'}
-                control={control}
-                render={({ field }) => (
-                  <InputCustom
-                    name='email'
-                    errors={errors}
-                    label='Email'
-                    type={InputType.EMAIL}
-                    field={field}
-                    disabled={editing}
-                    value={user && `${user.email}`}
+            <Grid item md={6}>
+              <Box sx={{ display: 'flex', }}>
+                {action === CRUDActions.READ && (
+                  <StyledInput
+                    label='email'
+                    disabled
+                    value={user && `${user.email}`} 
                   />
                 )}
-              />
+                {action === CRUDActions.CREATE && (
+                  <>
+                    <Controller
+                      name={'email'}
+                      control={control}
+                      render={({ field }) => (
+                        <InputCustom
+                          name='email'
+                          errors={errors}
+                          label='prefijo-email'
+                          type={InputType.TEXT}
+                          field={field}
+                          value={user && `${user.email}`} />
+                      )} 
+                    />
+
+                    <StyledInput
+                      label='subfijo-email'
+                      disabled
+                      value={'@unicauca.edu.co'} 
+                    />
+                  </>
+                )}
+              </Box>
             </Grid>
             {!user && (
               <Grid item md={6}>
@@ -213,16 +254,7 @@ export const UserForm = ({user}: IUserFormPageProps) => {
               </Grid>
             )}
             <Grid item md={6}>
-              { user && (
-                <Box mt={-1} >
-                  <Typography variant={'caption'} sx={{ color: theme.palette.info.main }}>Estado</Typography>
-                  <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}  sx={{ width: '100%' }}>
-                    <PinkSwitch disabled checked={user.state} />
-                    <UserStateComponent state={user.state} /> 
-                  </Box>
-                </Box>
-              )}
-              { !user &&(
+              { !user && currentUser.permissions.user.active && (
                 <Controller
                   name={'state'}
                   control={control}
@@ -241,53 +273,12 @@ export const UserForm = ({user}: IUserFormPageProps) => {
               )}
             </Grid>
             <Grid item md={12}>
-              { user && (
-                <>
-                  <Typography variant={'caption'} sx={{ color: theme.palette.info.main }}>Roles</Typography>
-                  <StyledCard sx={{ display: 'flex', gap: 2, p: 2 }}>
-                    <RenderRolesComponent roles={user.roles} />
-                  </StyledCard>
-                </>
-              )}
-              { !user && (
+              { currentUser.permissions.role.edit && (
                 <>
                   <Typography variant={'caption'} sx={{ color: theme.palette.info.main }}>Roles</Typography>
                   <StyledCard>
                     <Grid container spacing={3} p={4}>
-                      {roles.map( role => (
-                        <Grid item md={4} key={role.id}>
-                          <Box 
-                            key={role.id}
-                            position={'relative'} 
-                            sx={{ 
-                              background: theme.palette.info.light ,
-                              textAlign: 'center',
-                              borderRadius: '5px',
-                              pl: 2,
-                              pr: 2,
-                              textTransform: 'uppercase',
-                              color: theme.palette.customs.dark,
-                              height: '100%',
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center'
-                            }}
-                          >
-                            {
-                              role.state === 'add'
-                                ? 
-                                <IconButton sx={{ position: 'absolute', top: -10, right: -10, m:0, p: 0 }} onClick={() => handleRoles(role)} >
-                                  <Cancel color='error'/>
-                                </IconButton>
-                                : 
-                                <IconButton sx={{ position: 'absolute', top: -10, right: -10, m:0, p: 0 }} onClick={() => handleRoles(role)}>
-                                  <AddCircleSharp color='success'/>
-                                </IconButton>
-                            }
-                            <Typography variant='subtitle2'>{role.type}</Typography>
-                          </Box>
-                        </Grid>
-                      ))}
+                      <RenderRolesComponent  roles={roles} handleRoleState={handleRoles} />
                     </Grid>
                   </StyledCard>
                 </>

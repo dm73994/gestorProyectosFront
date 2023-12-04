@@ -1,18 +1,14 @@
 import { useTheme } from '@mui/material';
-import React from 'react'
 import { useFetchAndLoad } from '../../../hooks';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { PartialUserModel, defaultUserValues, userSchema } from '../schemas';
+import { PartialUserModel, defaultCreateUserValues, userCreateSchema, userUpdateSchema } from '../schemas';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AuthInteface, RoleModel, UserModel } from '../../../models';
 import Swal from 'sweetalert2';
 import { createuser, getUser, updateUser } from '../../../services';
-import { updateUserData } from '../../../redux/slices/User/UserSlice';
 import { AppStore } from '../../../redux/store';
-import { getRoles } from '../../../services/API/Roles.service';
-import { useState, useEffect } from 'react';
-import { RoleAdapter } from '../../../adapters';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface IUseUserFormProps {
@@ -22,74 +18,26 @@ interface IUseUserFormProps {
 export const useUserForm = ({user}: IUseUserFormProps) => {
   const theme = useTheme();
   const {loading, callEndpoint} = useFetchAndLoad();
-  const dispatch = useDispatch();
   const userState: AuthInteface = useSelector((state: AppStore) => state.user);
-  const [roles, setRoles] = useState<RoleModel[]>([]);
+  const {roles}: {roles: RoleModel[]} = useSelector((state: AppStore) => state.roles);
+  const [rolesState, setRoles] = useState<RoleModel[]>(roles);
   const navigate = useNavigate();
 
-
   const {register, control, handleSubmit, setValue, formState: { errors }, getValues} = useForm<PartialUserModel>({
-    resolver: yupResolver(userSchema),
-    defaultValues: user ? user : defaultUserValues,
-    resetOptions: {
-      keepErrors: false, // input errors will be retained with value update
-    }
+    resolver: yupResolver(!user ? userCreateSchema : userUpdateSchema),
+    defaultValues: user ? user : defaultCreateUserValues,
   });
 
   const onSubmit = async(data: UserModel) => {
 
     try{
-      await callEndpoint(createuser(data));
+      const oldData = await callEndpoint(getUser(data.id));
 
-      Swal.fire({
-        title: 'Usuario Creado',
-        text: 'El usuario se ha actualizado correctamente',
-        icon: 'success',
-        confirmButtonText: 'Aceptar'
-      })
-      navigate('/users')
-    }catch(err){
-      Swal.fire({
-        title: 'Error',
-        text: 'Ha ocurrido un error al intentar crear el usuario',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      })
-    }
-        
-  }
+      const newUpdateUser = {...oldData.data, ...data}
+      await callEndpoint(updateUser(newUpdateUser));
 
-  const onCreateUser = async(data: UserModel) => {
-    data.id = parseInt(data.id.toString())
-
-    try{
-      await callEndpoint(createuser(data));
-
-      Swal.fire({
-        title: 'Usuario Creado',
-        text: 'El usuario se ha creado correctamente',
-        icon: 'success',
-        confirmButtonText: 'Aceptar'
-      })
-      navigate('users', {replace: true})
-    }catch(err){
-      Swal.fire({
-        title: 'Error',
-        text: 'Ha ocurrido un error al intentar crear el usuario',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      })
-    }
-        
-  }
-
-  const onUserUpdate = async (updateData: UserModel) => {
-    try{
-      const oldData = await callEndpoint(getUser(updateData.id));
-      const newUpdateUser = {...oldData.data, ...updateData}
-      const response = await callEndpoint(updateUser(newUpdateUser));
-      // dispatch(updateUserData(response.data));
-      navigate('-1', {replace: true})
+      navigate('/users', {replace: true})
+      
       Swal.fire({
         title: 'Felicitaciones',
         text: 'Se ha actualizado el usuario correctamente',
@@ -104,24 +52,61 @@ export const useUserForm = ({user}: IUseUserFormProps) => {
         confirmButtonText: 'Aceptar'
       })
     }
+        
   }
 
-  const loadRoles = async() => {
+  const onCreateUser = async(data: UserModel) => {
+    data.id = parseInt(data.id.toString())
+    data.email = data.email + '@unicauca.edu.co'
     try{
-      // Obtener roles de la base de datos
-      const {data} = await callEndpoint(getRoles());
+      await callEndpoint(createuser(data));
 
-      // Adaptar los roles para el front
-      const rolesData = data?.map((rol) => RoleAdapter(rol))
-      setRoles(rolesData);
-
+      Swal.fire({
+        title: 'Usuario Creado',
+        text: 'El usuario se ha creado correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+      navigate('/users', {replace: true})
     }catch(err){
-      throw new Error(err.message);
+      Swal.fire({
+        title: 'Error',
+        text: 'Ha ocurrido un error al intentar crear el usuario',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
+    }
+        
+  }
+
+  const onUserUpdate = async(data: UserModel) => {
+    data.email = data.email + '@unicauca.edu.co'
+    try{
+      const oldData = await callEndpoint(getUser(data.id));
+      const newUpdateUser = {...oldData.data, ...data}
+      
+      await callEndpoint(updateUser(newUpdateUser));
+
+      Swal.fire({
+        title: 'Felicitaciones',
+        text: 'Se ha actualizado el usuario correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+      navigate('/users', {replace: true})
+    }catch(err){
+      Swal.fire({
+        title: 'Error',
+        text: 'Ha ocurrido un error al actualizar el usuario',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
     }
   }
 
   return {
     theme,
+    handleSubmit,
     onSubmit: handleSubmit(onSubmit),
     onCreate: handleSubmit(onCreateUser),
     onUpdate: handleSubmit(onUserUpdate),
@@ -132,8 +117,8 @@ export const useUserForm = ({user}: IUseUserFormProps) => {
     loading,
     user: userState.user,
     setValue,
-    loadRoles,
-    roles,
+    rolesState,
+    roles: rolesState,
     setRoles,
   }
 }  

@@ -3,6 +3,7 @@ export type PropuestaFormData = {
   title: string;
   director: number;
   estudiantes: number[];
+  doc: File;
 }
 
 
@@ -13,6 +14,7 @@ export const propuestaSchema = yup.object<PropuestaFormData>().shape({
     .of(yup.number())
     .min(1, 'Debe seleccionar al menos un estudiante')
     .required('El estudiante es requerido'),
+  doc: yup.mixed().required('Debe adjuntar el documento de la propuesta'),
 }).required();
 
 export const defaultPropuestaValues = {

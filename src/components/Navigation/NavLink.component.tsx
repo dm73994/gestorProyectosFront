@@ -4,9 +4,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useState } from 'react';
-import { styled, Theme, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Icon } from '@mui/material';
-import { theme } from '../../services';
 import { NavLinkProps } from '../../models';
 
 

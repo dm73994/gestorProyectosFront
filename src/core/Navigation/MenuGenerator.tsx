@@ -5,8 +5,6 @@ import { filterMenuByRole } from '../../utils';
 import { navigationMenu } from '.';
 import { MenuModel, NavGroupComponent, NavLinkComponent } from '../../components';
 import { List } from '@mui/material';
-import { NavLinkProps } from '../../models';
-import { Home } from '@mui/icons-material';
 
 export const MenuGenerator = () => {
   

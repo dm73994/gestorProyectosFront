@@ -1,8 +1,8 @@
 import { Box, Button, Divider, IconButton, Modal, TableCell, TableRow, Typography } from '@mui/material';
 import { useUser } from '../..';
 import { useEffect, useState } from 'react';
-import { UserModel } from '../../../../models';
-import { RenderRolesComponent, TableComponent, UserStateComponent } from '../../../../components';
+import { UserModel, permissionsModel } from '../../../../models';
+import { CustomLoader, RenderRolesComponent, TableComponent, UserStateComponent } from '../../../../components';
 import { green, red } from '@mui/material/colors';
 import { LimitedText, StyledCard } from '../../../../styled-components';
 import { Edit, PersonAdd, ToggleOff, ToggleOn, Visibility } from '@mui/icons-material';
@@ -13,9 +13,10 @@ interface IRowProps {
     onRowClick?: (user: UserModel) => void;
     handleUpdateUserNavigation?: (id: number) => void;
     handleChangeUserState: (userId: number) => void;
+    permissions: permissionsModel;
 }
 
-const Row = ({ row, onRowClick, handleUpdateUserNavigation, handleChangeUserState }: IRowProps) => {
+const Row = ({ row, onRowClick, handleUpdateUserNavigation, handleChangeUserState, permissions }: IRowProps) => {
     
   return (
     <TableRow onClick={() => onRowClick}>
@@ -53,7 +54,7 @@ const Row = ({ row, onRowClick, handleUpdateUserNavigation, handleChangeUserStat
         <Box display={'flex'}>
           {/* Ver USUARIO */}
           {   
-            row.permissions.user.consult && (
+            permissions.user.consult && (
               <IconButton title='Ver usuario' onClick={() => onRowClick(row)}>
                 <Visibility sx={{ color: '#00BFFF' }} />
               </IconButton>
@@ -61,7 +62,7 @@ const Row = ({ row, onRowClick, handleUpdateUserNavigation, handleChangeUserStat
           }
           {/* EDITAR USUARIO */}
           {   
-            row.permissions.user.edit && (
+            permissions.user.edit && (
               <IconButton title='Editar usuario' onClick={() => handleUpdateUserNavigation(row.id)}>
                 <Edit sx={{ color: '#16166B' }} />
               </IconButton>
@@ -69,7 +70,7 @@ const Row = ({ row, onRowClick, handleUpdateUserNavigation, handleChangeUserStat
           }
           {/* DESACTIVAR USUARIO */}
           {   
-            row.permissions.user.active && (
+            permissions.user.active && (
               <IconButton title={row.state ? 'Desactivar Usuario' : 'Activar usuario'} onClick={() => handleChangeUserState(row.id)}>
                 {row.state ? <ToggleOn sx={{ color: green.A700 }} /> : <ToggleOff sx={{ color: red.A700 }} /> }
               </IconButton>
@@ -95,7 +96,9 @@ const UsersListPage = () => {
     handleFilterIdChange,
     handleFilterNameChange,
     handleFilterUsernameChange,
-    filter
+    filter,
+    user: currentUser,
+    loading
   } = useUser(); 
     
 
@@ -117,6 +120,11 @@ const UsersListPage = () => {
 
   return (
     <StyledCard sx={{ padding: 3 }}>
+
+      {loading && (
+        <CustomLoader />
+      )}
+
       <Box display={'flex'} justifyContent={'center'} >
         <Typography>LISTA DE USUARIOS</Typography>
       </Box>
@@ -145,7 +153,8 @@ const UsersListPage = () => {
         props={{
           onRowClick: onRowClick,
           handleUpdateUserNavigation: handleUpdateUserNavigation,
-          handleChangeUserState: onChangeUserState
+          handleChangeUserState: onChangeUserState,
+          permissions: currentUser.permissions
         }}
       />
       

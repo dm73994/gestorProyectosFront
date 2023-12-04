@@ -6,7 +6,6 @@ export type UserModel = {
     name: string;
     lastname: string;
     username: string;
-    password: string;
     token: string;
     state: boolean;
     roles: RoleModel[];

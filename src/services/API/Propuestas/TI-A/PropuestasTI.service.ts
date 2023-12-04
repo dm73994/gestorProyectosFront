@@ -36,7 +36,6 @@ export const obtenerPropuestasTIByDirector = (idDirector: number) => {
   return {
     call: axiosBackendAPI.get('/PropuestasTI_A/propuestasDirector',
       {
-        signal: controller.signal, 
         params: {idDirector}
       }
     ),
@@ -44,14 +43,38 @@ export const obtenerPropuestasTIByDirector = (idDirector: number) => {
   };
 }
 
+export const obtenerPropuestasTIByDirectorYEstado = (idDirector: number, estado: number) => {
+  const controller = loadAbort();
+  return {
+    call: axiosBackendAPI.get(`/PropuestasTI_A/propuestasDirector/estado/${estado}`,
+      {
+        params: {idDirector}
+      }
+    ),
+    controller,
+  };
+}
+
+export const obtenerPropuestasTIByEstado = (estado: number) => {
+  const controller = loadAbort();
+  return {
+    call: axiosBackendAPI.get(`/PropuestasTI_A/propuestas/estado/${estado}`),
+    controller,
+  };
+}
+
+export const obtenerPropuestasTI = () => {
+  const controller = loadAbort();
+  return {
+    call: axiosBackendAPI.get('/PropuestasTI_A/propuestas'),
+    controller,
+  };
+}
+
 export const obtenerPropuestaTIById = (id: number) => {
   const controller = loadAbort();
   return {
-    call: axiosBackendAPI.get(`/PropuestasTI_A/propuestas/${id}`,
-      {
-        signal: controller.signal, 
-      }
-    ),
+    call: axiosBackendAPI.get(`/PropuestasTI_A/propuestas/${id}`),
     controller,
   };
 }

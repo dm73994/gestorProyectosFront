@@ -42,7 +42,7 @@ export const AproveModal = ({open, handleClose, propuestaId, type}: IProps) => {
         overflowY: 'auto', 
       }}>
 
-        <Typography variant='h6' textAlign={'center'} sx={{ flexGrow: 3 }}> Aprovar propuesta </Typography>
+        <Typography variant='h6' textAlign={'center'} sx={{ flexGrow: 3 }}> Aprobar propuesta </Typography>
         
         <Box display={'flex'} gap={4} justifyContent={'center'} sx={{ position: 'absolute', top: 10, right: 10 }}>
           <IconButton onClick={handleClose}>
@@ -77,7 +77,7 @@ export const AproveModal = ({open, handleClose, propuestaId, type}: IProps) => {
         <Box display={'flex'} gap={4}>
           <CustomButton text='Cancelar' color='error.main' onClick={handleClose} />
           <CustomButton 
-            text='Aprovar' 
+            text='Aprobar' 
             color='success.main' 
             onClick={() => {
               handleAprovePropuesta(propuestaId, type)

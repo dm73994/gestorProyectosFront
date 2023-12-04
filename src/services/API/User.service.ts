@@ -4,6 +4,7 @@ import { loadAbort } from '../../utils';
 
 export const getUser = (userId: number) => {
   const controller = loadAbort();
+  
   return {
     call: axiosBackendAPI.get<UserModel>(`/superUsuario/usuarios/${userId}`, {signal: controller.signal,}),
     controller,
@@ -11,11 +12,9 @@ export const getUser = (userId: number) => {
 };
 
 export const getUsers = () => {
-  const controller = loadAbort();
   return {
-    call: axiosBackendAPI.get<UserModel>('/superUsuario/usuarios', {signal: controller.signal}),
-    controller,
-  };
+    call: axiosBackendAPI.get('/superUsuario/usuarios'),
+  }
 }
 
 export const getUsersByRol = (rol: UsersRoles) => {
@@ -57,7 +56,7 @@ export const createuser = (newUser: UserModel) => {
 
 export const login = (data: LoginModel) => {
   return {
-    call: axiosBackendAPI.post<UserModel>('/superUsuario/usuariosLogin', data)
+    call: axiosBackendAPI.post<UserModel>('/superUsuario/login', data)
   };
 }
 

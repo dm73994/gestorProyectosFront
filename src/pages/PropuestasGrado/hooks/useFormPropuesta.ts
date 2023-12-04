@@ -7,7 +7,7 @@ import { UserModel, PropuestaModel, PropuestaModelBackend } from '../../../model
 import { AppStore } from '../../../redux/store';
 import { createPropuestaTI, downloadTemplateTI } from '../../../services/API/Propuestas/TI-A/PropuestasTI.service';
 import { TipoPropuesta } from '../schemas/TipoPropuesta';
-import { downloadTemplatePP } from '../../../services';
+import { createPropuestaPP, downloadTemplatePP } from '../../../services';
 import { PropuestaFormData, propuestaSchema } from '..';
 
 export const useFormPropuesta = () => {
@@ -104,6 +104,7 @@ export const useFormPropuesta = () => {
         title: dataPropuesta.title,
         director: dataPropuesta.director.id,
         estudiantes: dataPropuesta.estudiantes.map( est => est.id ),
+        doc: dataPropuesta.file as File,
       }
 
       const errors: boolean = await validationForm(data);
@@ -119,7 +120,13 @@ export const useFormPropuesta = () => {
         file: dataPropuesta.file as File,
       }
 
-      const response = await callEndpoint(createPropuestaTI(formattedData))
+      let response;
+
+      if(type === TipoPropuesta.TI){
+        response = await callEndpoint(createPropuestaTI(formattedData))
+      }else{
+        response = await callEndpoint(createPropuestaPP(formattedData))
+      }
 
       Swal.fire({
         icon: 'success',
@@ -143,7 +150,7 @@ export const useFormPropuesta = () => {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: err.errors.map( (error: string) => error).join(', ')
+        text: err.errors.map( (error: string) => '*' + error + '\n')
       });
       return false;
     }
@@ -216,11 +223,13 @@ export const useFormPropuesta = () => {
       cancelButtonText: 'Continuar sin descargar',
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33', 
-      confirmButtonText: 'Descargar'
+      confirmButtonText: 'Descargar',
+      allowOutsideClick: false,
+      showCloseButton: true,
     }).then((result) => {
       if (result.isConfirmed) handleDownload(TipoPropuesta.TI)
-      setType(TipoPropuesta.TI);
       handleStep(2);
+      setType(TipoPropuesta.TI);
     })
   }
 

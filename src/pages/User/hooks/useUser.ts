@@ -1,14 +1,15 @@
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { AppStore } from '../../../redux/store';
-import { AuthInteface, UserModel, UsersRoles } from '../../../models';
+import { AuthInteface, NotificationsModel, UserModel, UsersRoles } from '../../../models';
 import { useFetchAndLoad } from '../../../hooks';
-import { getUser, getUsers } from '../../../services';
+import { getNotifications, getUser, getUsers } from '../../../services';
 import { UserAdapter } from '../../../adapters';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { changeUserState, getUsersByRol } from '../../../services/API/User.service';
 import { useNavigate } from 'react-router-dom';
 import { UserListFilterModel } from '..';
+import { NotificationsAdapter } from '../../../adapters/Notifications.adapter';
 
 
 export const useUser = () => {
@@ -18,6 +19,7 @@ export const useUser = () => {
   const {callEndpoint, loading} = useFetchAndLoad();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<UserListFilterModel>({});
+  const [inbox, setInbox] = useState<NotificationsModel[]>([]);
     
   const getUsersList = async() => {    
     try{
@@ -31,7 +33,7 @@ export const useUser = () => {
 
       setUsersList(usersAdapter);
     }catch(err){
-      throw new Error(err.message);
+      throw new Error(err);
     }
   }
 
@@ -61,6 +63,22 @@ export const useUser = () => {
     }
   }
     
+  const getUserInbox = async() => {    
+    try{
+      // obtain arrray of users
+      const response = await callEndpoint(getNotifications(userState.user.id));
+            
+      // adapt users to UserModel
+      const adaptedNotifications: NotificationsModel[] = response.data?.map((msg) => {
+        return NotificationsAdapter(msg);
+      })
+
+      setInbox(adaptedNotifications);
+    }catch(err){
+      throw new Error(err.message);
+    }
+  }
+
   const onChangeUserState = async(userId: number) => {
     try{
       const {data: rawData} = await callEndpoint(changeUserState(userId));
@@ -98,6 +116,7 @@ export const useUser = () => {
     user: userState.user,
     getUsersList,
     getUsersRol,
+    getUserInbox,
     usersList,
     findUser,
     loading,
@@ -108,6 +127,7 @@ export const useUser = () => {
     handleFilterNameChange,
     handleFilterUsernameChange,
     handleFilterStateChange,
-    filter
+    filter,
+    inbox
   }
 }

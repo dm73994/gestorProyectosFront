@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { Box, Button, Typography, styled } from '@mui/material'
+import { Box, Button, IconButton, Typography, styled } from '@mui/material'
 import { useFileUploader } from './hooks/useFileUploader';
+import { Cancel } from '@mui/icons-material';
+import { useEffect } from 'react';
 
 
 const StyledFileUploader = styled('input')({
@@ -41,7 +43,7 @@ export const FileUploader = ({uploadedFile, setUploadedFile}: IFileUploaderProps
     handleDragEnter,
     handleDragLeave,
     handleDrop,
-  } = useFileUploader(uploadedFile, setUploadedFile);
+  } = useFileUploader(setUploadedFile);
 
   return (
     <UploaderBox
@@ -60,7 +62,14 @@ export const FileUploader = ({uploadedFile, setUploadedFile}: IFileUploaderProps
           <Typography> Para subir el archivo de tipo .doc o .docx arrastre aquí o </Typography>
           <Button component="label" variant='contained' color='primary' >
                 Seleccione un archivo
-            <StyledFileUploader type="file" />
+            <StyledFileUploader 
+              type="file" 
+              onChange={(e) => {
+                if (e.target.files !== null) {
+                  setUploadedFile(e.target.files[0]);
+                }
+              }}
+            />
           </Button>
         </Box>
       )}
@@ -68,10 +77,16 @@ export const FileUploader = ({uploadedFile, setUploadedFile}: IFileUploaderProps
         <div>
           <Typography variant='h6'>Archivos Cargados:</Typography>
           <ul>
-            <Box display={'flex'} sx={{ background: 'rgba(255,255,255, .8)', p: 2, borderRadius: '5px' }} >
+            <Box display={'flex'} sx={{ background: 'rgba(255,255,255, .8)', p: 2, borderRadius: '5px', position: 'relative' }} >
+
+              <IconButton onClick={() => setUploadedFile(null)} sx={{ position: 'absolute', top: 0, right: 0 }} color={'error'}>
+                <Cancel />
+              </IconButton>
+              
               <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#0D6EFD" className="bi bi-file-earmark-word-fill" viewBox="0 0 16 16">
                 <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM5.485 6.879l1.036 4.144.997-3.655a.5.5 0 0 1 .964 0l.997 3.655 1.036-4.144a.5.5 0 0 1 .97.242l-1.5 6a.5.5 0 0 1-.967.01L8 9.402l-1.018 3.73a.5.5 0 0 1-.967-.01l-1.5-6a.5.5 0 1 1 .97-.242z"/>
               </svg>
+
               <p>{uploadedFile.name}</p>
             </Box>
 

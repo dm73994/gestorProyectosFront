@@ -1,108 +1,128 @@
-import { RoleModel, UsersRoles, permissionsModel, propuestaPermissions, rolePermissions, userPermissions } from '../models';
+import { UsersRoles, anteproyectoPermissions, permissionsModel, propuestaPermissions, rolePermissions, userPermissions } from '../models';
 
 const initialRoles: permissionsModel = {
   user: {
-    edit: false,
-    add: false,
-    consult: false,
-    view: false,
-    active: false
-  },
-  role: {
-    edit: false,
-    add: false,
-    consult: false,
-    view: false
-  },
-  propuesta: {
-    add: false,
-    consult: false,
-    download: false,
-    aprove: false,
-    review: false
-  }
-}
-
-export const filterPermissionsByRole = (roles: RoleModel[]): permissionsModel => {
-
-  const roleTypes = roles.map((role: RoleModel) => role.type);
-  let initial = initialRoles;
-
-
-  if( roleTypes.includes(UsersRoles.ADMIN) ){
-    initial.user = setUserPermissions([]);
-    initial.role = setRolesPermissions([]);
-    initial.propuesta = setPropuestaPermissions([]);
-    return initial;
-  }
-
-  if( roleTypes.includes(UsersRoles.DIRECTOR) ){ 
-    initial.user = setUserPermissions(['add', 'edit', 'active']);
-    initial.role = setRolesPermissions(['add', 'edit']);
-    initial.propuesta = setPropuestaPermissions(['consult', 'aprove', 'review']);
-  }
-
-  if( roleTypes.includes(UsersRoles.COMITE) ){ 
-    initial.user = setUserPermissions(['add', 'edit', 'active']);
-    initial.role = setRolesPermissions(['add', 'edit']);
-    initial.propuesta = setPropuestaPermissions(['add']);
-  }
-
-  if( roleTypes.includes(UsersRoles.JEFEDEPARTAMENTO) ){
-    initial.user = setUserPermissions(['add', 'edit', 'active']);
-    initial.role = setRolesPermissions(['add', 'edit']);
-    initial.propuesta = setPropuestaPermissions(['add', 'review']);
-  }
-
-  if( roleTypes.includes(UsersRoles.ESTUDIANTE) ){ /* empty */ }
-  if( roleTypes.includes(UsersRoles.EVALUADOR) ){ /* empty */ }
-
-  return initial;
-}
-
-const setUserPermissions = (reject: string[]): userPermissions => {
-  const initial: userPermissions = {
     edit: true,
     add: true,
     consult: true,
     view: true,
     active: true,
-  };
-
-  reject.forEach((permission: string) => {
-    initial[permission] = false;
-  });
-
-  return initial;
-}
-
-const setRolesPermissions = (reject: string[]): rolePermissions => {
-  const initial: rolePermissions = {
+  },
+  role: {
     edit: true,
     add: true,
     consult: true,
-    view: true,
-  };
-
-  reject.forEach((permission: string) => {
-    initial[permission] = false;
-  });
-
-  return initial;
-}
-
-const setPropuestaPermissions = (reject: string[]): propuestaPermissions => {
-  const initial: propuestaPermissions = {
+    view: true
+  },
+  propuesta: {
     add: true,
-    consult: true,
+    viewAll: true,
+    viewOwner: true,
     download: true,
     aprove: true,
     review: true,
-  };
+  },
+  anteproyecto: {
+    addAnteproyecto: true,
+    addVersion: true,
+    addReview: true,
+    addEvaluator: true,    
+    download: true,    
+    viewReviews: true,
+    viewAll: true,
+    viewOwner: true,
+    viewEvaluator: true,    
+    aprove: true,
+    reject: true,
+    viewAccepted: true,
+  }
+}
+
+export const filterPermissionsByRole = (roles: string[]): permissionsModel => {
+
+  const permissions = initialRoles;
+
+  if( roles.includes(UsersRoles.ADMIN) ){
+    permissions.user = removeUserPermissions([], permissions.user);
+    permissions.role = removeRolesPermissions([], permissions.role);
+    permissions.propuesta = removePropuestaPermissions([], permissions.propuesta);
+    permissions.anteproyecto = removeAnteproyectoPermissions([], permissions.anteproyecto);
+    return permissions;
+  }
+
+  if( roles.includes(UsersRoles.DIRECTOR) ){ 
+    permissions.user = removeUserPermissions(['add', 'edit', 'active'], permissions.user);
+    permissions.role = removeRolesPermissions(['add', 'edit', 'consult', 'view'], permissions.role);
+    permissions.propuesta = removePropuestaPermissions(['aprove', 'review', 'viewAll'], permissions.propuesta);
+    permissions.anteproyecto = removeAnteproyectoPermissions(['addReview', 'addEvaluator', 'viewAll', 'viewEvaluator', 'aprove', 'reject', 'viewAccepted'], permissions.anteproyecto);
+  }
+
+  if( roles.includes(UsersRoles.COMITE) ){ 
+    permissions.user = removeUserPermissions(['add', 'edit', 'active'], permissions.user);
+    permissions.role = removeRolesPermissions(['add', 'edit'], permissions.role);
+    permissions.propuesta = removePropuestaPermissions(['add', 'aprove'], permissions.propuesta);
+    permissions.anteproyecto = removeAnteproyectoPermissions(['addAnteproyecto', 'addVersion', 'addReview', 'addEvaluator', 'viewAll', 'viewOwner', 'viewEvaluator', 'aprove', 'reject' ], permissions.anteproyecto);
+  }
+
+  if( roles.includes(UsersRoles.JEFEDEPARTAMENTO) ){
+    permissions.user = removeUserPermissions(['add', 'edit', 'active'], permissions.user);
+    permissions.role = removeRolesPermissions(['add', 'edit'], permissions.role);
+    permissions.propuesta = removePropuestaPermissions(['add', 'review'], permissions.propuesta);
+    permissions.anteproyecto = removeAnteproyectoPermissions(['addAnteproyecto', 'addVersion', 'addReview', 'viewOwner', 'viewEvaluator', 'aprove', 'reject' ], permissions.anteproyecto);
+  }
+
+  if( roles.includes(UsersRoles.COORDINADOR) ){
+    permissions.user = removeUserPermissions(['add', 'edit', 'active'], permissions.user);
+    permissions.role = removeRolesPermissions(['add', 'edit'], permissions.role);
+    permissions.propuesta = removePropuestaPermissions(['add'], permissions.propuesta);
+    permissions.anteproyecto = removeAnteproyectoPermissions(['addAnteproyecto', 'addEvaluator', 'addVersion', 'addReview', 'viewOwner', 'viewEvaluator' ], permissions.anteproyecto);
+  }
+
+  if( roles.includes(UsersRoles.ASESOR) ){/* empty */}
+  if( roles.includes(UsersRoles.ESTUDIANTE) ){ /* empty */ }
+
+  if( roles.includes(UsersRoles.EVALUADOR) ){
+    permissions.user = removeUserPermissions(['add', 'edit', 'active', 'consult', 'view'], permissions.user);
+    permissions.role = removeRolesPermissions(['add', 'edit', 'consult', 'view'], permissions.role);
+    permissions.propuesta = removePropuestaPermissions(['add', 'review', 'viewAll', 'viewOwner', 'download', 'aprove'], permissions.propuesta);
+    permissions.anteproyecto = removeAnteproyectoPermissions(['addAnteproyecto', 'addVersion', 'addEvaluator', 'viewAll', 'viewOwner', 'viewAccepted', ], permissions.anteproyecto);
+  }
+
+  return permissions;
+}
+
+const removeUserPermissions = (reject: string[], previousPermissions: userPermissions): userPermissions => {
 
   reject.forEach((permission: string) => {
-    initial[permission] = false;
+    previousPermissions[permission] = false;
   });
 
-  return initial;
+  return previousPermissions;
+}
+
+const removeRolesPermissions = (reject: string[], previousPermissions: rolePermissions): rolePermissions => {
+
+  reject.forEach((permission: string) => {
+    previousPermissions[permission] = false;
+  });
+
+  return previousPermissions;
+}
+
+const removePropuestaPermissions = (reject: string[], previousPermissions: propuestaPermissions): propuestaPermissions => {
+
+  reject.forEach((permission: string) => {
+    previousPermissions[permission] = false;
+  });
+
+  return previousPermissions;
+}
+
+const removeAnteproyectoPermissions = (reject: string[], previousPermissions: anteproyectoPermissions): anteproyectoPermissions => {
+
+  reject.forEach((permission: string) => {
+    previousPermissions[permission] = false;
+  });
+
+  return previousPermissions;
 }
