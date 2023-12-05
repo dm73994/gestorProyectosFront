@@ -27,13 +27,13 @@ export const useFormAnteproyecto = (type: string) => {
   const [openAntepropuestas, setOpenAntepropuestas] = useState<boolean>(false);  
   const [openCodirectores, setOpenCodirectores] = useState<boolean>(false);
   const [propuestaData, setPropuestaData] = useState<DetailsPropuesta>(null); // DetailsPropuesta | null
-
+  
   const propuestaHandler = usePropuesta({ type });
-
+  
   const [formData, setFormData] = useState<AnteproyectoFormData>(defaultAnteproyectoValues);
-
+  
   /**
-  * Esta función 
+   * Esta función 
   */
 
   const handleTitle = (title: string) => {
@@ -45,17 +45,18 @@ export const useFormAnteproyecto = (type: string) => {
 
   const handleSelectedPropuesta = (idPropuesta: number) => {
     const propuesta = propuestaHandler.propuestasUser.find((propuesta) => {
+      console.log('🚀 ~ file: useFormAnteproyecto.ts:30 ~ useFormAnteproyecto ~ propuestaData:', propuesta)
       return propuesta.idPropuesta === idPropuesta
     })
     
     setPropuestaData(propuesta);
-    
+
     setFormData({
       ...formData,
       idPropuesta,
       estudiantes: propuesta.estudiantes.map((estudiante) => estudiante.id),
       idDirector: currentUser.id,
-      idAsesor: propuesta.asistente.id,
+      idAsesor: propuesta.asistente?.id,
       idCodirector: propuesta.codirector?.id
     })    
   }
@@ -104,6 +105,7 @@ export const useFormAnteproyecto = (type: string) => {
     setFormData({
       ...formData,
     })
+    
     const validation = validateForm(formData, anteproyectoCreateSchema);
     if(!validation) return;
     

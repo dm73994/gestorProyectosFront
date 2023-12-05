@@ -1,3 +1,4 @@
 export const getFileName = (path: string) => {
-  return String(path).split('\\').pop()
+  const name: string = String(path).split('\\').pop()
+  return name !== 'null'? name : null
 }

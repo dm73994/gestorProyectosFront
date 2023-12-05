@@ -45,17 +45,17 @@ export const FormatViewVersions = ({reviews}: IFormatViewVersionsProps) => {
                   {...(open ? { timeout: 700 } : {})}
                 >
                   <List component="div" disablePadding>
+                    
                     <ListItem sx={{ pl: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} divider>
                       <UserBrief title='Evaluador' name={review.evaluacion1.evaluator.name} username={review.evaluacion1.evaluator.username} />                      
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography textAlign={'center'} variant={'button'} > DOCUMENTOS </Typography>
                         <Box sx={{ display: 'flex', gap: 1 }}>
-                          <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
-                            Evaluación
-                          </Button>
-                          <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
-                            Observaciones
-                          </Button>
+                          { review.evaluacion1.reviewFile && (
+                            <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
+                              Evaluación
+                            </Button>
+                          )}
                           { review.evaluacion1.observationsFile && (
                             <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
                               Observaciones
@@ -64,17 +64,18 @@ export const FormatViewVersions = ({reviews}: IFormatViewVersionsProps) => {
                         </Box>
                       </Box>
                     </ListItem>
+
                     <ListItem sx={{ pl: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} divider>
                       <UserBrief title='Evaluador' name={review.evaluacion2.evaluator.name} username={review.evaluacion2.evaluator.username} />                      
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography textAlign={'center'} variant={'button'} > DOCUMENTOS </Typography>
                         <Box sx={{ display: 'flex', gap: 1 }}>
-                          <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
-                            Evaluación
-                          </Button>
-                          <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
-                            Observaciones
-                          </Button>
+
+                          { review.evaluacion2.reviewFile && (
+                            <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
+                              Evaluación
+                            </Button>
+                          )}
                           { review.evaluacion2.observationsFile && (
                             <Button variant='contained' startIcon={<FileDownloadOutlined />} color={'info'} >
                               Observaciones

@@ -36,8 +36,8 @@ const _adaptTIB = (anteproyecto: any): DetailsAnteproyecto => {
 
   const reviews: DetailsAnteproyectoReview[] = [null, null, null];
   anteproyecto.revisiones.forEach((revision: any, index: number) => {
-
-    const docReview1 = getFileName(revision.identificacionEvaluador1.rutaRespuesta);
+    
+    const docReview1 = getFileName(revision.identificacionEvaluador1?.rutaRespuesta);
     const evaluador1 = revision.identificacionEvaluador1 !== null && {
       concept: revision.identificacionEvaluador1.conceptoRevision,
       conceptDate: new Date(revision.identificacionEvaluador1.fechaConcepto),
@@ -46,10 +46,11 @@ const _adaptTIB = (anteproyecto: any): DetailsAnteproyecto => {
       observationsFile: getFileName(revision.identificacionEvaluador1.rutaAnteproyectoRevisado),
       creationDate: new Date(revision.identificacionEvaluador1.fechaAsignacion),
       evaluator: UserAdapter(revision.identificacionEvaluador1.identificacionEvaluador),
-      complete: docReview1 !== '',
+      complete: docReview1 !== null,
+      id: revision.identificacionEvaluador1.idRevisionEvaluadorTIB
     };
 
-    const docReview2 = getFileName(revision.identificacionEvaluador2.rutaRespuesta);
+    const docReview2 = getFileName(revision.identificacionEvaluador2?.rutaRespuesta);
     const evaluador2 = revision.identificacionEvaluador2 !== null && {
       concept: revision.identificacionEvaluador2.conceptoRevision,
       conceptDate: new Date(revision.identificacionEvaluador2.fechaConcepto),
@@ -58,7 +59,8 @@ const _adaptTIB = (anteproyecto: any): DetailsAnteproyecto => {
       observationsFile: getFileName(revision.identificacionEvaluador2.rutaAnteproyectoRevisado),
       creationDate: new Date(revision.identificacionEvaluador2.fechaAsignacion),
       evaluator: UserAdapter(revision.identificacionEvaluador2.identificacionEvaluador),
-      complete: docReview2 !== '',
+      complete: docReview1 !== null,
+      id: revision.identificacionEvaluador1.idRevisionEvaluadorTIB
     };
     
     const review: DetailsAnteproyectoReview = ({
@@ -69,7 +71,6 @@ const _adaptTIB = (anteproyecto: any): DetailsAnteproyecto => {
 
     reviews[index] = review;
   });
-
 
 
 
@@ -95,7 +96,6 @@ const _adaptTIB = (anteproyecto: any): DetailsAnteproyecto => {
 }
 
 const _adaptPPB = (anteproyecto: any): DetailsAnteproyecto => {
-  console.log('🚀 ~ file: Anteproyecto.adapter.ts:81 ~ anteproyecto:', anteproyecto)
 
   const estudiantes: UserModel[] = [UserAdapter(anteproyecto.identificacionEstudiantePPB)];
 

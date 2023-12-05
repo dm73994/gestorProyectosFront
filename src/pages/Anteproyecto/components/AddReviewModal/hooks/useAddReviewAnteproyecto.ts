@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFetchAndLoad } from '../../../../../hooks';
-import { AuthInteface, UserModel } from '../../../../../models';
+import { AuthInteface, DetailsAnteproyectoReview, UserModel, evaluation } from '../../../../../models';
 import { AppStore } from '../../../../../redux/store';
-import { addReviewPPB } from '../../../../../services/API/Anteproyexto';
+import { addReviewPPB, addReviewTIB } from '../../../../../services/API/Anteproyexto';
 import { validateModalForm } from '../../../../../utils';
 import { useParams } from 'react-router-dom';
 import * as yup from 'yup';
@@ -39,7 +39,7 @@ export const initialReview: IReviewEvaluator = {
 
 
 export const useAddReviewAnteproyecto = () => {
-  const {id} = useParams();
+  const {id, type} = useParams();
   const formatedId = String(id).replace('-', '.');
   const {callEndpoint} = useFetchAndLoad();
   const userState: AuthInteface = useSelector((state: AppStore) => state.user);
@@ -87,18 +87,25 @@ export const useAddReviewAnteproyecto = () => {
   /**
   * AGREGAR REVISION
   */
-  const handleAddReview = async(version: number) => {
+  const handleAddReview = async(version: DetailsAnteproyectoReview) => {
+    setData({
+      ...data,
+      idReview: 2
+    })
     try{
-      setData({
-        ...data,
-        idReview: version
-      })
       const validate = await validateModalForm(data, reviewSchema);
       if( validate.error ) {
         setErrors(validate.message);
         return;
       }
-      await callEndpoint(addReviewPPB(data));
+
+      if(type === 'TI'){
+        await callEndpoint(addReviewTIB(data));
+      }else if(type === 'PP'){
+        await callEndpoint(addReviewPPB(data));
+      }else{
+        throw Error('Formato no valido');
+      }
     }catch(error) {
       console.log('🚀 ~ file: ConsultAnteproyecto.page.tsx:60 ~ handleAddReview ~ error', error)
     }

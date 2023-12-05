@@ -1,13 +1,13 @@
 import { Button, Grid } from '@mui/material'
 import { PersonAdd } from '@mui/icons-material'
-import { AuthInteface, DetailsAnteproyecto, UserModel, UsersRoles } from '../../../../../models';
+import { AnteproyectoType, AuthInteface, DetailsAnteproyecto, UserModel, UsersRoles } from '../../../../../models';
 import { useEffect, useState } from 'react';
 import { LittleUserCard, TableSelectUser } from '../../../../../components';
 import { useUser } from '../../../..';
 import { useSelector } from 'react-redux';
 import { AppStore } from '../../../../../redux/store';
 import { useFetchAndLoad } from '../../../../../hooks';
-import { addEvaluatorsAnteproyectoPPB } from '../../../../../services/API/Anteproyexto';
+import { addEvaluatorsAnteproyectoPPB, addEvaluatorsAnteproyectoTIB } from '../../../../../services/API/Anteproyexto';
 import Swal from 'sweetalert2';
 
 
@@ -63,7 +63,13 @@ export const FormEvaluators = ({anteproyecto}: IFormEvaluatorProps) => {
         idAnteproyecto: anteproyecto.id
       })
 
-      await callEndpoint(addEvaluatorsAnteproyectoPPB(formData));
+      if(anteproyecto.type === AnteproyectoType.PP_B){
+        await callEndpoint(addEvaluatorsAnteproyectoPPB(formData));
+      }else if(anteproyecto.type === AnteproyectoType.TI_B){
+        await callEndpoint(addEvaluatorsAnteproyectoTIB(formData));
+      }else{
+        throw Error('Formato no soportado');
+      }
       
       Swal.fire({
         icon: 'success',

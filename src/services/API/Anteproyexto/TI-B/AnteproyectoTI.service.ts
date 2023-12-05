@@ -53,6 +53,7 @@ export const downloadAnteproyectoTIB = (idAnteproyecto: string, version: number)
 }
 
 export const addEvaluatorsAnteproyectoTIB = (data: evaluatorsForm) => {
+  console.log('🚀 ~ file: AnteproyectoTI.service.ts:56 ~ addEvaluatorsAnteproyectoTIB ~ evaluatorsForm:', data)
   return {
     call: axiosBackendAPI.patch(`AnteproyectoTI_B/asignarEvaluadores?jefeDepartamento=${data.idJefedepartamento}&evaluador1=${data.evaluadores[0]}&evaluador2=${data.evaluadores[1]}&anteproyecto=${data.idAnteproyecto}`
     )
@@ -69,6 +70,7 @@ export const addReviewTIB = (data: IReviewEvaluator) => {
     fileTI_B: data.reviewFile,
     fileAnteproyectoRevisado: data.annotationsFiles
   }
+  console.log('🚀 ~ file: AnteproyectoTI.service.ts:73 ~ addReviewTIB ~ format:', format)
   return {
     call: axiosBackendAPI.put('AnteproyectoTI_B/revision', format, { headers: { 'Content-Type': 'multipart/form-data' } })
   }

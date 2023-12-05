@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { IUseAnteproyectos } from '../../../schemas'
 import { AppStore } from '../../../../../redux/store'
 import { downloadAnteproyectoTIB, getAllAnteproyectosTIB, getAllAnteproyectosByDirectorTIB, getAllAnteproyectosByEvaluadorTIB, getAnteproyectoByIdTIB } from '../../../../../services/API/Anteproyexto/TI-B/AnteproyectoTI.service';
-import { AuthInteface, DetailsAnteproyectoReview, UserModel } from '../../../../../models';
+import { AuthInteface, DetailsAnteproyectoReview, UserModel, evaluation } from '../../../../../models';
 import { useFetchAndLoad } from '../../../../../hooks';
 import { AnteproyectoAdapter } from '../../../../../adapters/Anteproyecto.adapter';
 import { AnteproyectoType, DetailsAnteproyecto } from '../../../../../models/Formatos/DetailsAnteproyecto.model';
@@ -64,6 +64,27 @@ export const useAnteproyectoTIB = (): IUseAnteproyectos => {
     return false;
   }
 
+  /**
+   * 
+   * @param anteproyecto 
+   * @returns boolean
+   * @description Validar cuando el evaluador una vez realizada su labor descartiva en base a eso
+   * la acción para agregar revisión
+   */
+  const canAddReview = (anteproyecto: DetailsAnteproyecto):boolean => {
+
+    if(currentUser.permissions.anteproyecto.addReview === false) return false;
+
+    const version: number = anteproyecto.version - 1;
+    if(anteproyecto.reviews[version] === null) return false;
+
+    const evaluacion: evaluation = anteproyecto.reviews[version].evaluacion1.evaluator.id === currentUser.id
+      ? anteproyecto.reviews[version].evaluacion1
+      : anteproyecto.reviews[version].evaluacion2
+                              
+    return !evaluacion.complete;
+  }
+
 
   enum ENUMCONCEPTO {
     REVISION = 'En revision',
@@ -85,15 +106,23 @@ export const useAnteproyectoTIB = (): IUseAnteproyectos => {
    * una nueva revision lo cual habilitaría el boton de asignación de nuevos evaluadores para la siguiente revisión
    */
   const canAddEvaluators = (anteproyecto: DetailsAnteproyecto): boolean => {
-    const version: number=  anteproyecto.version;
+
+    if(currentUser.permissions.anteproyecto.addEvaluator === false) return false;
+
+    const version: number =  anteproyecto.version - 1;
+
     const revision: DetailsAnteproyectoReview = anteproyecto.reviews[version];
-    const conceptoR1: ENUMCONCEPTO = revision.evaluacion1.concept as ENUMCONCEPTO;
-    const conceptoR2: ENUMCONCEPTO = revision.evaluacion2.concept as ENUMCONCEPTO;
+    console.log('🚀 ~ file: useAnteproyectoTIB.ts:119 ~ canAddEvaluators ~ revision:', revision)
+    if(revision === null) return true;
 
-    /** LAS EVALUACIONES DEBEN ESTAR COMPLETAS POR AMBOS EVALUADORES */
-    if(!conceptoR1 || !conceptoR2) return false;
+    const conceptoR1: string = revision.evaluacion1.concept;
+    const conceptoR2: string = revision.evaluacion2.concept;
 
-    if(conceptoR1 === conceptoR2 && conceptoR1 === ENUMCONCEPTO.REVISION) {
+
+    if(revision.evaluacion1.complete === false || revision.evaluacion2.complete === false) {
+      return false;
+    }
+    else if(revision.evaluacion1.complete && revision.evaluacion2.complete){
       return true;
     }
 
@@ -142,6 +171,7 @@ export const useAnteproyectoTIB = (): IUseAnteproyectos => {
     handleNavigation,
     handleDownloadAnteproyecto,
     consultFormatA,
-    canAddEvaluators
+    canAddEvaluators,
+    canAddReview
   }
 }

@@ -30,7 +30,7 @@ export const AddReviewModal = ({open, anteproyecto, handleClose}: IProps) => {
         description: 'Agregue una revisión al anteproyecto, esta revisión será de ayuda para la corrección y nueva versión del anteproyecto creada por el director.'
       }} 
       handleClose={handleClose} 
-      successFunction={() => handleAddReview(anteproyecto.version)} 
+      successFunction={() => handleAddReview(anteproyecto.reviews[anteproyecto.version-1])} 
     >
 
       <Grid container spacing={2} sx={{ marginTop: '1rem' }}>

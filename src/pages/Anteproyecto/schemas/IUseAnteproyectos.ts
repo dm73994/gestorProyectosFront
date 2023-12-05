@@ -12,4 +12,5 @@ export interface IUseAnteproyectos {
     consultFormatA: (idPropuesta: number) => void;
     handleDownloadAnteproyecto: (idAnteproyecto: DetailsAnteproyecto) => void;
     canAddEvaluators: (anteproyecto: DetailsAnteproyecto) => boolean;
+    canAddReview: (anteproyecto: DetailsAnteproyecto) => boolean;
 }

@@ -24,6 +24,8 @@ const ConsultAnteproyecto = () => {
     loadAnteproyectoById,
     consultFormatA,
     handleDownloadAnteproyecto,
+    canAddReview,
+    canAddEvaluators
   } = useAnteproyecto(type);
 
   const {
@@ -36,7 +38,7 @@ const ConsultAnteproyecto = () => {
     setOpenAproveModal,
     setOpenFixedModal,
     setOpenReviewModal,
-    handleLoadAnteproyecto
+    handleLoadAnteproyecto,
   } = useCosultAnteproyecto();
 
   /**
@@ -119,7 +121,7 @@ const ConsultAnteproyecto = () => {
               )}
 
               {/* AGREGAR REVISION */}
-              {currentUser.permissions.anteproyecto.addReview && (
+              {canAddReview(currentAnteproyecto) && (
                 <CustomButton 
                   onClick={() => setOpenReviewModal(true)} 
                   text={'Agregar revisión'}      
@@ -128,7 +130,7 @@ const ConsultAnteproyecto = () => {
               )}
 
               {/* AGREGAR EVALUADORES */}
-              {currentUser.permissions.anteproyecto.addEvaluator && currentAnteproyecto.reviews.length === 0 && (
+              {canAddEvaluators(currentAnteproyecto) && (
                 <CustomButton 
                   onClick={toggleDrawer} 
                   text={'Agregar evaluadores'}      

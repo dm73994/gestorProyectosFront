@@ -6,7 +6,7 @@ export interface DetailsAnteproyectoReview {
     evaluacion2: evaluation;
 }
 
-interface evaluation {
+export interface evaluation {
     concept: string;
     conceptDate: Date;
     notes: string;
@@ -15,4 +15,5 @@ interface evaluation {
     creationDate: Date;
     evaluator: UserModel;
     complete: boolean;
+    id: number;
 }
